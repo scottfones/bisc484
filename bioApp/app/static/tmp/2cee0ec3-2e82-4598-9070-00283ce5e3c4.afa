@@ -1,0 +1,58 @@
+CLUSTAL 2.1 multiple sequence alignment
+
+
+hemoglobin_subunit_delta        ---------------MVHLTPEEKTAVNALWGKVN--VDAVGGEALGRLL
+hemoglobin_subunit_beta         ---------------MVHLTPEEKSAVTALWGKVN--VDEVGGEALGRLL
+hemoglobin_subunit_gamma-2      ---------------MGHFTEEDKATITSLWGKVN--VEDAGGETLGRLL
+hemoglobin_subunit_gamma-1      ---------------MGHFTEEDKATITSLWGKVN--VEDAGGETLGRLL
+hemoglobin_subunit_epsilon      ---------------MVHFTAEEKAAVTSLWSKMN--VEEAGGEALGRLL
+hemoglobin_subunit_alpha        ----------------MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMF
+hemoglobin_subunit_theta-1      ----------------MALSAEDRALVRALWKKLGSNVGVYTTEALERTF
+hemoglobin_subunit_zeta         ----------------MSLTKTERTIIVSMWAKISTQADTIGTETLERLF
+hemoglobin_subunit_mu           -----------------MLSAQERAQIAQVWDLIAGHEAQFGAELLLRLF
+cytoglobin                      MEKVPGEMEIERRERSEELSEAERKAVQAMWARLYANCEDVGVAILVRFF
+myoglobin                       ----------------MGLSDGEWQLVLNVWGKVEADIPGHGQEVLIRLF
+neuroglobin                     ------------------MERPEPELIRQSWRAVSRSPLEHGTVLFARLF
+                                                  :   :   :   *  :           : * :
+
+hemoglobin_subunit_delta        VVYPWTQRFFESFG-DLSSPDAVMGNPKVKAHGKKVLGAFSDGLAHLDN-
+hemoglobin_subunit_beta         VVYPWTQRFFESFG-DLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDN-
+hemoglobin_subunit_gamma-2      VVYPWTQRFFDSFG-NLSSASAIMGNPKVKAHGKKVLTSLGDAIKHLDD-
+hemoglobin_subunit_gamma-1      VVYPWTQRFFDSFG-NLSSASAIMGNPKVKAHGKKVLTSLGDATKHLDD-
+hemoglobin_subunit_epsilon      VVYPWTQRFFDSFG-NLSSPSAILGNPKVKAHGKKVLTSFGDAIKNMDN-
+hemoglobin_subunit_alpha        LSFPTTKTYFPHF--DLSH-----GSAQVKGHGKKVADALTNAVAHVDD-
+hemoglobin_subunit_theta-1      LAFPATKTYFSHL--DLSP-----GSSQVRAHGQKVADALSLAVERLDD-
+hemoglobin_subunit_zeta         LSHPQTKTYFPHF--DLHP-----GSAQLRAHGSKVVAAVGDAVKSIDD-
+hemoglobin_subunit_mu           TVYPSTKVYFPHL--SACQ-----DATQLLSHGQRMLAAVGAAVQHVDN-
+cytoglobin                      VNFPSAKQYFSQFK-HMEDPLEMERSPQLRKHACRVMGALNTVVENLHDP
+myoglobin                       KGHPETLEKFDKFK-HLKSEDEMKASEDLKKHGATVLTALGGILKKKGH-
+neuroglobin                     ALEPDLLPLFQYNCRQFSSPEDCLSSPEFLDHIRKVMLVIDAAVTNVEDL
+                                   *     *                 ..  *   :   .        . 
+
+hemoglobin_subunit_delta        --LKGTFSQLSELHCDKLHVDPENFRLLGNVLVCVLARNFGKEFTPQMQA
+hemoglobin_subunit_beta         --LKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQA
+hemoglobin_subunit_gamma-2      --LKGTFAQLSELHCDKLHVDPENFKLLGNVLVTVLAIHFGKEFTPEVQA
+hemoglobin_subunit_gamma-1      --LKGTFAQLSELHCDKLHVDPENFKLLGNVLVTVLAIHFGKEFTPEVQA
+hemoglobin_subunit_epsilon      --LKPAFAKLSELHCDKLHVDPENFKLLGNVMVIILATHFGKEFTPEVQA
+hemoglobin_subunit_alpha        --MPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHA
+hemoglobin_subunit_theta-1      --LPHALSALSHLHACQLRVDPASFQLLGHCLLVTLARHYPGDFSPALQA
+hemoglobin_subunit_zeta         --IGGALSKLSELHAYILRVDPVNFKLLSHCLLVTLAARFPADFTAEAHA
+hemoglobin_subunit_mu           --LRAALSPLADLHALVLRVDPANFPLLIQCFHVVLASHLQDEFTVQMQA
+cytoglobin                      DKVSSVLALVGKAHALKHKVEPVYFKILSGVILEVVAEEFASDFPPETQR
+myoglobin                       --HEAEIKPLAQSHATKHKIPVKYLEFISECIIQVLQSKHPGDFGADAQG
+neuroglobin                     SSLEEYLASLGRKHR-AVGVKLSSFSTVGESLLYMLEKCLGPAFTPATRA
+                                      :  :.  *     :    :  :   :   :       *    : 
+
+hemoglobin_subunit_delta        AYQKVVAGVANALAHKYH-----------------------
+hemoglobin_subunit_beta         AYQKVVAGVANALAHKYH-----------------------
+hemoglobin_subunit_gamma-2      SWQKMVTGVASALSSRYH-----------------------
+hemoglobin_subunit_gamma-1      SWQKMVTAVASALSSRYH-----------------------
+hemoglobin_subunit_epsilon      AWQKLVSAVAIALAHKYH-----------------------
+hemoglobin_subunit_alpha        SLDKFLASVSTVLTSKYR-----------------------
+hemoglobin_subunit_theta-1      SLDKFLSHVISALVSEYR-----------------------
+hemoglobin_subunit_zeta         AWDKFLSVVSSVLTEKYR-----------------------
+hemoglobin_subunit_mu           AWDKFLTGVAVVLTEKYR-----------------------
+cytoglobin                      AWAKLRGLIYSHVTAAYKEVGWVQQVPNATTPPATLPSSGP
+myoglobin                       AMNKALELFRKDMASNYKELGFQG-----------------
+neuroglobin                     AWSQLYGAVVQAMSRGWDGE---------------------
+                                :  :    .   :   :                        

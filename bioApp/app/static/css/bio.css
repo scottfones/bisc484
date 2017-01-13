@@ -1,0 +1,7 @@
+.bioSequence {
+    font-family: monospace;
+    color: #404040;
+    font-size: 12px;
+    word-break: break-all;
+    word-wrap: break-word;
+}

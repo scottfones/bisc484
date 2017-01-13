@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Protein Results</h2>
+    
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          Sequence List
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">    
+        
+	<div class="well well-sm">
+
+          {% for record in sequenceList %}
+	  <div>
+		<p>
+		<b>ID: </b>{{record.id}}<br>
+		<b>Name: </b>{{record.name}}<br>
+		<b>Description: </b>{{record.description}}<br>
+		<b>Sequence: </b>
+		
+		<span class="bioSequence">
+		{{record.seq}}
+		</span>
+		</p>
+	  </div>
+          {% endfor %}
+   
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          MSA - Clustal Output
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+
+        <div class="well well-sm">
+
+	<pre class="bioSequence">{% for line in alignmentClustal %}
+{{line}}{% endfor %}
+	</pre>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          MSA - FASTA Output
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+
+        <div class="well well-sm">
+	<pre class="bioSequence">{% for line in alignmentFASTA %}
+{{line}}{% endfor %}
+	</pre>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingFour">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          MSA - LaTeX with Identity Highlighting
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+      <div class="panel-body">
+
+        <div class="well well-sm">
+	    <p class="pull-right">
+	        <b>LaTeX Code:</b><br>
+		<span class="bioSequence" style="font-size:10px">
+		    \documentclass[preview]{standalone} <br>
+		    \usepackage{texshade} <br>
+		    \usepackage{inconsolata} <br>
+		    \begin{texshade}{alignmentFile.aln} <br>
+		    \shadingmode[allmatchspecial]{identical}  <br>
+		    \showcaption[bottom]{\textbf{Protein MSA with Identity Highlighting}}  <br>
+		    \hideconsensus  <br>
+		    \namesfootnotesize  <br>
+		    \residuesfootnotesize  <br>
+		    \numberingscriptsize <br>
+		    \showlegend  <br>
+		    \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
+		    \end{texshade}  <br>
+		    \end{document} <br>
+		</span>
+	    </p>
+
+	    <object data={{texIdentityPDF}} type="application/pdf" width="500px" height="600px"> 
+		<p>
+		    There was a problem displaying the pdf. You can 
+		    download it directly <a href={{texIdentityPDF}}>here</a>
+		</p>
+            </object>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingFive">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+          MSA - LaTeX with Chemical Similarity Highlighting
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+      <div class="panel-body">
+
+        <div class="well well-sm">
+	    <p class="pull-right">
+	        <b>LaTeX Code:</b><br>
+		<span class="bioSequence" style="font-size:10px">
+		    \documentclass[preview]{standalone} <br>
+		    \usepackage{texshade} <br>
+		    \usepackage{inconsolata} <br>
+		    \begin{texshade}{alignmentFile.aln} <br>
+		    \shadingmode[chemical]{functional}  <br>
+		    \showcaption[bottom] <br>
+		    &nbsp;&nbsp;
+		    {\textbf{Protein MSA with Chemical Similarity Highlighting}}  <br>
+		    \hideconsensus  <br>
+		    \namesfootnotesize  <br>
+		    \residuesfootnotesize  <br>
+		    \numberingscriptsize <br>
+		    \showlegend  <br>
+		    \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
+		    \end{texshade}  <br>
+		    \end{document} <br>
+		</span>
+	    </p>
+
+	    <object data={{texChemicalPDF}} type="application/pdf" width="500px" height="600px"> 
+		<p>
+		    There was a problem displaying the pdf. You can 
+		    download it directly <a href={{texChemicalPDF}}>here</a>
+		</p>
+            </object>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingSix">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+          MSA - LaTeX with Structual Similarity Highlighting
+        </a>
+      </h4>
+    </div>
+    <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+      <div class="panel-body">
+
+        <div class="well well-sm">
+	    <p class="pull-right">
+	        <b>LaTeX Code:</b><br>
+		<span class="bioSequence" style="font-size:10px">
+		    \documentclass[preview]{standalone} <br>
+		    \usepackage{texshade} <br>
+		    \usepackage{inconsolata} <br>
+		    \begin{texshade}{alignmentFile.aln} <br>
+		    \shadingmode[structure]{functional}  <br>
+		    \showcaption[bottom] <br>
+		    &nbsp;&nbsp;
+		    {\textbf{Protein MSA with Structural Similarity Highlighting}}  <br>
+		    \hideconsensus  <br>
+		    \namesfootnotesize  <br>
+		    \residuesfootnotesize  <br>
+		    \numberingscriptsize <br>
+		    \showlegend  <br>
+		    \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
+		    \end{texshade}  <br>
+		    \end{document} <br>
+		</span>
+	    </p>
+
+	    <object data={{texStructuralPDF}} type="application/pdf" width="500px" height="600px"> 
+		<param name="view" value="Fit" />
+                <p>
+		   There was a problem displaying the pdf. You can 
+		   download it directly <a href={{texStructuralPDF}}>here</a>
+		</p>
+            </object>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingSeven">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseSeven" aria-expanded="false" aria-controls="collapseEight">
+          Dendrogram - ASCII 
+        </a>
+      </h4>
+    </div>
+    <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+      <div class="panel-body">
+
+        <div class="well well-sm">
+             
+	<pre class="bioSequence">{% for line in asciiTree %}{{line}}{% endfor %}
+	</pre>
+	
+	</div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingEight">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+          Dendrogram - Graphic 
+        </a>
+      </h4>
+    </div>
+    <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
+      <div class="panel-body">
+
+        <div class="well well-sm">
+		<img src={{graphicTree}} class="img-responsive" alt="Dendrogram Image">	
+	</div>
+
+      </div>
+    </div>
+  </div>
+<!--
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingNine">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+	  Statistics - Raw Replacements 
+        </a>
+      </h4>
+    </div>
+    <div id="collapseNine" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingNine">
+      <div class="panel-body">
+
+
+        <div class="well well-sm">
+	    <h5>Raw Replacement Table</h5>      
+	    {{replacementTable|safe}}
+	    <h5>Raw Replacement Plot</h5>      
+	    {{replacePlotDiv|safe}}
+	</div>
+
+      </div>
+    </div>
+  </div>
+-->
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTen">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+	  Statistics - Replacement Counts 
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTen" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTen">
+      <div class="panel-body">
+
+
+        <div class="well well-sm">
+	    <h5>Replacement Table</h5>      
+	    {{accRepTable|safe}}
+	    <h5>Replacement Plot</h5>      
+	    {{accRepPlotDiv|safe}}
+	</div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
