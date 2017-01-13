@@ -21,6 +21,12 @@ from Bio.Align.Applications import ClustalwCommandline
 from Bio import Entrez, AlignIO, SeqIO, Phylo, SubsMat, Alphabet
 
 
+# Define File Paths
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+ABS_TMP = os.path.join(APP_ROOT, 'static/tmp/')
+
+
+'''
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -34,7 +40,7 @@ def login():
                             title='Sign In',
                             form=form,
                             providers=app.config['OPENID_PROVIDERS'])
-
+'''
 
 @app.route('/proteinInput', methods=['GET', 'POST'])
 def proteinInput():
@@ -56,7 +62,7 @@ def proteinInput():
         if userID is None:
             accessionRedirect.set_cookie('uuid', str(uuid.uuid4()), expires=cookieExpireDate)
         else:
-            for oldFile in glob.glob('/srv/bioApp/app/static/tmp/' + userID + '*'):
+            for oldFile in glob.glob(ABS_TMP + userID + '*'):
                 os.remove(oldFile)
             
             accessionRedirect.set_cookie('uuid', str(uuid.uuid4()), expires=cookieExpireDate)
@@ -64,9 +70,9 @@ def proteinInput():
 
         return accessionRedirect
 
-    if os.path.isfile('/srv/bioApp/app/static/protein/accessionValues.txt'):
+    if os.path.isfile(APP_ROOT + '/static/protein/accessionValues.txt'):
 
-        inFile = open('/srv/bioApp/app/static/protein/accessionValues.txt', 'r')
+        inFile = open(APP_ROOT + '/static/protein/accessionValues.txt', 'r')
         accessionValues = []
 
         for inputLine in inFile:
@@ -120,7 +126,7 @@ def proteinResults():
 
 
     # Create Sequence File
-    seqFile = '/srv/bioApp/app/static/tmp/' + userID + '.faa' 
+    seqFile = ABS_TMP + userID + '.faa' 
     
     f = open(seqFile, 'w')
 
@@ -133,8 +139,8 @@ def proteinResults():
 
 
     # Create Alignment and Tree File
-    alignFile = '/srv/bioApp/app/static/tmp/' + userID + '.afa'
-    treeFile = '/srv/bioApp/app/static/tmp/' + userID + '.dnd'
+    alignFile = ABS_TMP + userID + '.afa'
+    treeFile = ABS_TMP + userID + '.dnd'
 
 #    clustalomega_cline = ClustalOmegaCommandline(infile=seqFile, outfile=alignFile, guidetree_out=treeFile, outfmt="clu", outputorder='tree-order', force=True)
 #    clustalomega_cline()
@@ -155,7 +161,7 @@ def proteinResults():
 
     
     # Generate Latex Identity Alignment
-    texIdentityFile = '/srv/bioApp/app/static/tmp/' + userID + '_identity.tex'
+    texIdentityFile = ABS_TMP + userID + '_identity.tex'
 
     with open(texIdentityFile, 'w') as texfile:
        
@@ -177,13 +183,13 @@ def proteinResults():
 
     texfile.close()
 
-    os.system('pdflatex -output-directory=/srv/bioApp/app/static/tmp %s' % texIdentityFile)
+    os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texIdentityFile))
     
     texIdentityPDF = 'static/tmp/' + userID + '_identity.pdf'
 
 
     # Generate Latex Chemical Similarity Alignment
-    texChemicalFile= '/srv/bioApp/app/static/tmp/' + userID + '_chemical.tex'
+    texChemicalFile= ABS_TMP + userID + '_chemical.tex'
 
     with open(texChemicalFile, 'w') as texfile:
        
@@ -204,13 +210,13 @@ def proteinResults():
 
     texfile.close()
 
-    os.system('pdflatex -output-directory=/srv/bioApp/app/static/tmp %s' % texChemicalFile)
+    os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texChemicalFile))
     
     texChemicalPDF = 'static/tmp/' + userID + '_chemical.pdf'    
 
 
     # Generate Latex Structural Similarity Alignment
-    texStructuralFile = '/srv/bioApp/app/static/tmp/' + userID + '_structural.tex'
+    texStructuralFile = ABS_TMP + userID + '_structural.tex'
 
     with open(texStructuralFile, 'w') as texfile:
        
@@ -231,7 +237,7 @@ def proteinResults():
 
     texfile.close()
 
-    os.system('pdflatex -output-directory=/srv/bioApp/app/static/tmp %s' % texStructuralFile)
+    os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texStructuralFile))
     
     texStructuralPDF = 'static/tmp/' + userID + '_structural.pdf'  
 
@@ -239,7 +245,7 @@ def proteinResults():
     # Create ASCII Dendrogram
     tree = Phylo.read(treeFile, "newick")
 
-    asciiTreeFile = '/srv/bioApp/app/static/tmp/' + userID + '_asciiTree.txt'
+    asciiTreeFile = ABS_TMP + userID + '_asciiTree.txt'
     asciiTree = []
 
     with open(asciiTreeFile, 'w') as asciiTF:
@@ -256,7 +262,7 @@ def proteinResults():
 
 
     # Create Graphic Dendrogram
-    graphicTreeFile = '/srv/bioApp/app/static/tmp/' + userID + '_graphicTree.png'
+    graphicTreeFile = ABS_TMP + userID + '_graphicTree.png'
 
     tree = tree.as_phyloxml()
     tree.root.color='gray'
@@ -396,7 +402,7 @@ def proteinResults():
 
     fig = go.Figure(data=data, layout=layout)
     
-    accRepName = '/srv/bioApp/app/static/tmp/userID' + '_accRepPlot'
+    accRepName = ABS_TMP + userID + '_accRepPlot'
     
     accRepPlotDiv = plot(fig, output_type='div')
     
