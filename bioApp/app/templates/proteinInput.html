@@ -9,9 +9,9 @@
     <form action="" method="post" name="AccessionVals">
     {{ form.hidden_tag() }}
 
-    {{ form.accessionInput( rows="25" ) }}
+    {{ form.accessionInput( class="form-control", style="height:505px;" ) }}
 	
-    <p class="text-right"><input class="btn btn-info" type="submit" value="Submit"></p>
+    <input class="btn btn-primary btn-block" type="submit" value="Submit">
 
     </form>
     </div>
@@ -19,7 +19,7 @@
     <div class="well well-sm">
         <p>
         Enter NCBI Accession values in the form to the right (one per line). 
-        <br>
+	<br><br>
 	The pre-populated values correspond to the proteins in the table below.
 	<br>
 	On subsequent visits, you can skip directly to the results page. To override the saved values, resubmit the form.
