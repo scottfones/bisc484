@@ -283,10 +283,6 @@ def proteinResults():
 
 
     # Calculate Alignment Statistics
-    alignSummary = AlignInfo.SummaryInfo(alignment)
-
-    replaceInfo = alignSummary.replacement_dictionary()
-
     proteinList_x = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 
                      'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
     
@@ -294,14 +290,17 @@ def proteinResults():
                      'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
 
 
+
+
     # Generate Observed Frequency Matrix
     lambdaValue = 1 / 0.347
+
+    alignSummary = AlignInfo.SummaryInfo(alignment)
+    replaceInfo = alignSummary.replacement_dictionary()
 
     accRepMat = SubsMat.SeqMat(replaceInfo)
     obsFrqMat = SubsMat._build_obs_freq_mat(accRepMat)
  
-    print(obsFrqMat)
-
     obsFrq_z = []
 
     for x_i, xPro in enumerate(proteinList_x):
@@ -438,8 +437,6 @@ def proteinResults():
 
     for row in obsFrq_z:
         obsFrqList.extend(row)
-
-    print(len(obsFrqList))
 
     data = [
         go.Histogram(
