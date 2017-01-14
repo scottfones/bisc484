@@ -11,8 +11,10 @@ import datetime
 import matplotlib
 matplotlib.use('Agg')
 import pylab
+import numpy as np
 import plotly.graph_objs as go
 import matplotlib.pyplot as plt
+from decimal import Decimal
 from plotly.offline import download_plotlyjs, plot
 from Bio.Alphabet import IUPAC
 from Bio.Align import AlignInfo
@@ -285,69 +287,38 @@ def proteinResults():
 
     replaceInfo = alignSummary.replacement_dictionary()
 
-    proteinReplacementCounts_x = ['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I',
-                                  'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V']
-
-    proteinReplacementCounts_y = ['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I',
-                                  'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V']
-
-    replace_x = []
-    replace_y = []
-    replace_z = []
+    proteinList_x = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 
+                     'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
     
-    for x_i, xPro in enumerate(proteinReplacementCounts_x):
-        for y_i, yPro in enumerate(proteinReplacementCounts_y):
-            replace_x.append(xPro)
-            replace_y.append(yPro)
-            replace_z.append(replaceInfo[(xPro,yPro)])
-
-    # Generate Acceptable Count Matrix
-    #accRepMat = SubsMat.SeqMat(replaceInfo)
-    #accRepMat.print_full_mat()
-
-    accRep_x = []
-    accRep_y = []
-    accRep_z = []
-
-    for x_i, xPro in enumerate(proteinReplacementCounts_x):
-        for y_i, yPro in enumerate(proteinReplacementCounts_y):
-            accRep_x.append(xPro)
-            accRep_y.append(yPro)
-            
-            if (xPro == yPro):
-                accRep_z.append(replaceInfo[(xPro,yPro)])
-            else:
-                accRep_z.append(replaceInfo[(xPro,yPro)] + replaceInfo[(yPro,xPro)])
-
-    # Generate Accepted Replacement Table
-    accRepTableHTML = []
-
-    accRepTableHTML.append('<table style="width:700px;table-layout:fixed" class="table table-condensed table-striped table-bordered">')
-    accRepTableHTML.append('<thead><tr><th></th>')
-
-    for residue in proteinReplacementCounts_x:
-        accRepTableHTML.append('<th> %s </th>' % residue)
-
-    accRepTableHTML.append('</tr></thead><tbody>')
-
-    for residuex in proteinReplacementCounts_x:
-        accRepTableHTML.append('<tr><th> %s </th>' % residuex)
-        
-        for residuey in proteinReplacementCounts_y:
-            if (residuex == residuey):
-                accRepTableHTML.append('<td> %g </td>' % replaceInfo[(residuey,residuex)])
-            else:
-                repSum = replaceInfo[(residuey,residuex)] + replaceInfo[(residuex,residuey)]
-                accRepTableHTML.append('<td> %g </td>' % repSum)
-
-        accRepTableHTML.append('</tr>')
-
-    accRepTableHTML.append('</tbody></table>')
-
-    accRepTable = ''.join(accRepTableHTML)
+    proteinList_y = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 
+                     'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
 
 
-    # Generate 3D Accepted Replacement Plot
+    # Generate Observed Frequency Matrix
+    lambdaValue = 1 / 0.347
+
+    accRepMat = SubsMat.SeqMat(replaceInfo)
+    obsFrqMat = SubsMat._build_obs_freq_mat(accRepMat)
+ 
+    print(obsFrqMat)
+
+    obsFrq_z = []
+
+    for x_i, xPro in enumerate(proteinList_x):
+        rowList = []
+
+        for y_i in range(0,(x_i+1)):
+            #print('xi: %g, xPro: %s' % (x_i,xPro))
+            #print('yi: %g, yPro: %s' % (y_i,proteinList_y[y_i]))
+            #print('zi: %g' % obsFrqMat[(proteinList_y[y_i],xPro)])
+            rowList.append(obsFrqMat[(proteinList_y[y_i],xPro)])
+
+        #print(rowList)
+        obsFrq_z.append(rowList)
+
+    '''    
+    # Generate 3d plot
+
     trace1 = go.Scatter3d(
         x = accRep_x,
         y = accRep_y,
@@ -402,17 +373,106 @@ def proteinResults():
 
     fig = go.Figure(data=data, layout=layout)
     
-    accRepName = ABS_TMP + userID + '_accRepPlot'
+    #accRepName = ABS_TMP + userID + '_accRepPlot'
     
     accRepPlotDiv = plot(fig, output_type='div')
+    ''' 
+
+    annotations = []
+
+    for n, row in enumerate(obsFrq_z):
+        for m, val in enumerate(row):
+            var = obsFrq_z[n][m]
+
+            annotations.append(
+                dict(
+                    text = '%.1E' % Decimal(val) if val != 0 else '0',
+                    x = proteinList_x[m],
+                    y = proteinList_y[n],
+                    xref = 'x1', yref= 'y1',
+                    font = dict(color='#E0E0E0'if val < 0.035 else 'black', size=6),
+                    showarrow = False)
+            )
+  
+    colorscale = 'Viridis'
     
-    # Calculate Log Odds Matrix
-    baseE = 2.71828183 # e approx
-    scalingFactor = 2.88184438 # 1 / lambda approx
+    trace = go.Heatmap(x=proteinList_x, y=proteinList_y, z=obsFrq_z, colorscale=colorscale, showscale=True)
 
-    my_arm = SubsMat.SeqMat(replaceInfo)
-    my_lom = SubsMat.make_log_odds_matrix(my_arm)
+    fig = go.Figure(data=[trace])
+    fig['layout'].update(
+        title = "Observed Frequency Heatmap",
+        annotations=annotations,
+        #xaxis=dict(ticks='', side='top'),
+        # ticksuffix is a workaround to add a bit of padding
+        #yaxis=dict(ticks='', ticksuffix='  '),
+        width = 700,
+        height = 700,
+        autosize = False,
 
+        xaxis = dict(
+            range = [-0.5,19.5],
+            autorange =  True,
+            type = 'category',
+            showgrid=False,
+            title = 'Residue 1'
+        ),
+        yaxis = dict(
+            range = [19.5,-0.5],
+            autorange = True,
+            showgrid=False,
+            type = 'category',
+            title = 'Residue 2'
+        ),
+
+        margin = dict(
+            l = 50,
+            r = 0,
+            b = 45,
+            t = 45
+        )
+    )
+
+    obsFrqHtMpDiv = plot(fig, output_type='div')
+
+    obsFrqList = []
+
+    for row in obsFrq_z:
+        obsFrqList.extend(row)
+
+    print(len(obsFrqList))
+
+    data = [
+        go.Histogram(
+            x = obsFrqList,
+            autobinx = False,
+            xbins = dict(
+                start = 0,
+                end = 0.069,
+                size = 0.001
+            )
+        )
+    ]
+
+    layout = go.Layout(
+        title = 'Observed Frequency Histogram',
+        width = 700,
+        height = 500,
+        autosize = False,
+
+        xaxis = dict(title='Value'),
+        yaxis = dict(title='Count'),
+
+        margin = dict(
+            l = 50,
+            r = 0,
+            b = 45,
+            t = 45
+        )
+    )
+
+    fig = go.Figure(data=data, layout=layout)
+
+    obsFrqHistDiv = plot(fig, output_type='div')
 
 
     return render_template('proteinResults.html',
@@ -425,10 +485,8 @@ def proteinResults():
                             texStructuralPDF = texStructuralPDF,
                             asciiTree = asciiTree,
                             graphicTree = graphicTreeFile,
-                            #replacementTable = replacementTable,
-                            #replacePlotDiv = replacePlotDiv,
-                            accRepTable = accRepTable,
-                            accRepPlotDiv = accRepPlotDiv)
+                            obsFrqHtMpDiv = obsFrqHtMpDiv,
+                            obsFrqHistDiv = obsFrqHistDiv)
 
 
 
