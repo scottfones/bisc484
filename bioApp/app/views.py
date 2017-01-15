@@ -369,7 +369,8 @@ def proteinResults():
 
 
     # Calculate Replacement Probabilities
-     
+    print(len(alignment[0].seq))    
+ 
 
     '''
     # Generate Observed Frequency Matrix
