@@ -6,6 +6,7 @@ from .forms import LoginForm, ProteinInputForm
 # 'PYTHON' IMPORTS
 import os
 import glob
+import math
 import uuid
 import datetime
 import matplotlib
@@ -446,6 +447,7 @@ def proteinResults():
     
     pairPlotPlotDiv = plot(fig, output_type='div')
     '''
+    # Generate Pairwise Probability Heatmap
     annotations = []
 
     for n, row in enumerate(obsFrq_z):
@@ -501,6 +503,7 @@ def proteinResults():
 
     pairFrqHtMpDiv = plot(fig, output_type='div')
 
+    # Generate Pairwise Probability Histogram
     obsFrqList = []
 
     for row in obsFrq_z:
@@ -540,6 +543,77 @@ def proteinResults():
     pairFrqHistDiv = plot(fig, output_type='div')
 
 
+    # Calculate Scoring Matrix
+    lambdaValue = 0.347
+    scoreMat_z = []
+
+    for x_i, xPro in enumerate(proteinKeys):
+        rowList = []
+
+        for y_i in range(0,(x_i+1)):
+            rowList.append( round( (1/lambdaValue) * np.log( obsFrqMat[(proteinKeys[y_i],xPro)] / (resFrqs[xPro] * resFrqs[proteinKeys[y_i]]) )))
+
+        scoreMat_z.append(rowList)
+    
+    # Generate Scoring Matrix Heatmap
+    annotations = []
+
+    for n, row in enumerate(scoreMat_z):
+        for m, val in enumerate(row):
+            var = scoreMat_z[n][m]
+
+            annotations.append(
+                dict(
+                    text = '%g' % val,
+                    #text = str(val),
+                    x = proteinKeys[m],
+                    y = proteinKeys[n],
+                    xref = 'x1', yref= 'y1',
+                    font = dict(color='#E0E0E0'if val < 5 else 'black', size=12),
+                    showarrow = False)
+            )
+
+    colorscale = 'Viridis'
+
+    trace = go.Heatmap(x=proteinKeys, y=proteinKeys, z=scoreMat_z, colorscale=colorscale, showscale=False)
+
+    fig = go.Figure(data=[trace])
+    fig['layout'].update(
+        title = "Scoring Matrix Heatmap",
+        annotations=annotations,
+        width = 700,
+        height = 700,
+        autosize = False,
+
+        xaxis = dict(
+            range = [-0.5,19.5],
+            autorange =  True,
+            type = 'category',
+            ticks='', side='bottom',
+            showgrid=False,
+            title = 'Residue 1'
+        ),
+        yaxis = dict(
+            range = [19.5,-0.5],
+            autorange = True,
+            showgrid=False,
+            ticks='', ticksuffix='  ',
+            type = 'category',
+            title = 'Residue 2'
+        ),
+
+        margin = dict(
+            l = 55,
+            r = 0,
+            b = 45,
+            t = 45
+        )
+    )
+
+    scoreMatDiv = plot(fig, output_type='div')
+
+
+
     return render_template('proteinResults.html',
                             title='Protein Results',
                             sequenceList = sequenceList,
@@ -552,7 +626,8 @@ def proteinResults():
                             graphicTree = graphicTreeFile,
                             singleLtrFrqDiv = singleLtrFrqDiv,
                             pairFrqHtMpDiv = pairFrqHtMpDiv,
-                            pairFrqHistDiv = pairFrqHistDiv)
+                            pairFrqHistDiv = pairFrqHistDiv,
+                            scoreMatDiv = scoreMatDiv)
 
 
 
