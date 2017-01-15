@@ -246,7 +246,11 @@ def proteinResults():
 
     # Create ASCII Dendrogram
     tree = Phylo.read(treeFile, "newick")
-
+   
+    # re-root tree 
+    leghemeClade = tree.find_clades(name='leghemoglobin') 
+    tree.root_with_outgroup(leghemeClade)
+    
     asciiTreeFile = ABS_TMP + userID + '_asciiTree.txt'
     asciiTree = []
 
@@ -282,20 +286,95 @@ def proteinResults():
     graphicTreeFile = 'static/tmp/' + userID + '_graphicTree.png'
 
 
-    # Calculate Alignment Statistics
-    proteinList_x = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 
-                     'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
-    
-    proteinList_y = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 
-                     'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
+    # Calculate Single Letter Frequencies
+    proteinKeys = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 
+                   'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
+            
+    totalLetters = 0
+    resFrqs = dict.fromkeys(proteinKeys, 0)
+  
+    # get letter counts and total
+    for record in alignment:
+        for letter in record.seq:
+            if (letter == '-'):
+                continue
+            else:
+                resFrqs[letter] = resFrqs[letter] + 1
+                totalLetters += 1
+   
+    # convert from counts to freqs
+    # prime frqXY for bar graph
+    frqX = []
+    frqY = []
+
+    for key in sorted(resFrqs):
+        resFrqs[key] = resFrqs[key] / float(totalLetters)
+        frqX.append(key)
+        frqY.append(resFrqs[key])
+
+    # Generate Single Frequency Table
+    data = [go.Bar(
+        x = frqX,
+        y = frqY,
+
+        marker = dict(
+            color = 'rgb(58,79,134)',
+            line = dict(
+                color = 'rgb(8,48,107)',
+                width = 1.5),
+        ),
+            #opacity = 0.7
+    )]
+
+    layout = go.Layout(
+        title = 'Single Letter Frequencies',
+        autosize = False,
+        width = 700,
+        height = 500,
+
+        annotations = [
+            dict(
+                x = xi,
+                y = yi,
+                text = '%.1E' % Decimal(yi),
+                font = dict(size=8),
+                xanchor = 'center',
+                yanchor = 'bottom',
+                showarrow = False,
+            ) for xi,yi in zip(frqX,frqY)
+        ],
+
+        xaxis = dict(
+            title = 'Residue',
+            #showgrid = True,
+        ),
+
+        yaxis = dict(
+            title = 'Frequency',
+            #showgrid = True,
+        ),
+
+        margin = dict(
+            l = 50,
+            r = 0,
+            b = 45,
+            t = 45
+        )
+
+    )
+
+    fig = go.Figure(data=data, layout=layout)
+
+    singleLtrFrqDiv = plot(fig, output_type='div') 
 
 
+    # Calculate Replacement Probabilities
+     
 
-
+    '''
     # Generate Observed Frequency Matrix
-    lambdaValue = 1 / 0.347
-
     alignSummary = AlignInfo.SummaryInfo(alignment)
+    
     replaceInfo = alignSummary.replacement_dictionary()
 
     accRepMat = SubsMat.SeqMat(replaceInfo)
@@ -307,15 +386,11 @@ def proteinResults():
         rowList = []
 
         for y_i in range(0,(x_i+1)):
-            #print('xi: %g, xPro: %s' % (x_i,xPro))
-            #print('yi: %g, yPro: %s' % (y_i,proteinList_y[y_i]))
-            #print('zi: %g' % obsFrqMat[(proteinList_y[y_i],xPro)])
             rowList.append(obsFrqMat[(proteinList_y[y_i],xPro)])
 
-        #print(rowList)
         obsFrq_z.append(rowList)
 
-    '''    
+        
     # Generate 3d plot
 
     trace1 = go.Scatter3d(
@@ -375,7 +450,6 @@ def proteinResults():
     #accRepName = ABS_TMP + userID + '_accRepPlot'
     
     accRepPlotDiv = plot(fig, output_type='div')
-    ''' 
 
     annotations = []
 
@@ -470,6 +544,7 @@ def proteinResults():
     fig = go.Figure(data=data, layout=layout)
 
     obsFrqHistDiv = plot(fig, output_type='div')
+    ''' 
 
 
     return render_template('proteinResults.html',
@@ -482,8 +557,7 @@ def proteinResults():
                             texStructuralPDF = texStructuralPDF,
                             asciiTree = asciiTree,
                             graphicTree = graphicTreeFile,
-                            obsFrqHtMpDiv = obsFrqHtMpDiv,
-                            obsFrqHistDiv = obsFrqHistDiv)
+                            singleLtrFrqDiv = singleLtrFrqDiv)
 
 
 
