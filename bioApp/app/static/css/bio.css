@@ -5,3 +5,7 @@
     word-break: break-all;
     word-wrap: break-word;
 }
+
+.smallTableFont {
+    font-size: 12px;
+}
