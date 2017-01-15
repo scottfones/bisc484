@@ -12,6 +12,7 @@ import matplotlib
 matplotlib.use('Agg')
 import pylab
 import numpy as np
+import collections
 import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 from decimal import Decimal
@@ -355,7 +356,7 @@ def proteinResults():
         ),
 
         margin = dict(
-            l = 50,
+            l = 55,
             r = 0,
             b = 45,
             t = 45
@@ -368,12 +369,7 @@ def proteinResults():
     singleLtrFrqDiv = plot(fig, output_type='div') 
 
 
-    # Calculate Replacement Probabilities
-    print(len(alignment[0].seq))    
- 
-
-    '''
-    # Generate Observed Frequency Matrix
+    # Calculate Pairwise Probabilities
     alignSummary = AlignInfo.SummaryInfo(alignment)
     
     replaceInfo = alignSummary.replacement_dictionary()
@@ -383,15 +379,15 @@ def proteinResults():
  
     obsFrq_z = []
 
-    for x_i, xPro in enumerate(proteinList_x):
+    for x_i, xPro in enumerate(proteinKeys):
         rowList = []
 
         for y_i in range(0,(x_i+1)):
-            rowList.append(obsFrqMat[(proteinList_y[y_i],xPro)])
+            rowList.append(obsFrqMat[(proteinKeys[y_i],xPro)])
 
         obsFrq_z.append(rowList)
 
-        
+    '''    
     # Generate 3d plot
 
     trace1 = go.Scatter3d(
@@ -448,10 +444,8 @@ def proteinResults():
 
     fig = go.Figure(data=data, layout=layout)
     
-    #accRepName = ABS_TMP + userID + '_accRepPlot'
-    
-    accRepPlotDiv = plot(fig, output_type='div')
-
+    pairPlotPlotDiv = plot(fig, output_type='div')
+    '''
     annotations = []
 
     for n, row in enumerate(obsFrq_z):
@@ -461,8 +455,8 @@ def proteinResults():
             annotations.append(
                 dict(
                     text = '%.1E' % Decimal(val) if val != 0 else '0',
-                    x = proteinList_x[m],
-                    y = proteinList_y[n],
+                    x = proteinKeys[m],
+                    y = proteinKeys[n],
                     xref = 'x1', yref= 'y1',
                     font = dict(color='#E0E0E0'if val < 0.035 else 'black', size=6),
                     showarrow = False)
@@ -470,15 +464,12 @@ def proteinResults():
   
     colorscale = 'Viridis'
     
-    trace = go.Heatmap(x=proteinList_x, y=proteinList_y, z=obsFrq_z, colorscale=colorscale, showscale=True)
+    trace = go.Heatmap(x=proteinKeys, y=proteinKeys, z=obsFrq_z, colorscale=colorscale, showscale=True)
 
     fig = go.Figure(data=[trace])
     fig['layout'].update(
-        title = "Observed Frequency Heatmap",
+        title = "Pairwise Probability Heatmap",
         annotations=annotations,
-        #xaxis=dict(ticks='', side='top'),
-        # ticksuffix is a workaround to add a bit of padding
-        #yaxis=dict(ticks='', ticksuffix='  '),
         width = 700,
         height = 700,
         autosize = False,
@@ -487,6 +478,7 @@ def proteinResults():
             range = [-0.5,19.5],
             autorange =  True,
             type = 'category',
+            ticks='', side='bottom',
             showgrid=False,
             title = 'Residue 1'
         ),
@@ -494,19 +486,20 @@ def proteinResults():
             range = [19.5,-0.5],
             autorange = True,
             showgrid=False,
+            ticks='', ticksuffix='  ',
             type = 'category',
             title = 'Residue 2'
         ),
 
         margin = dict(
-            l = 50,
+            l = 55,
             r = 0,
             b = 45,
             t = 45
         )
     )
 
-    obsFrqHtMpDiv = plot(fig, output_type='div')
+    pairFrqHtMpDiv = plot(fig, output_type='div')
 
     obsFrqList = []
 
@@ -526,16 +519,16 @@ def proteinResults():
     ]
 
     layout = go.Layout(
-        title = 'Observed Frequency Histogram',
+        title = 'Pairwise Probability Histogram',
         width = 700,
         height = 500,
         autosize = False,
 
-        xaxis = dict(title='Value'),
+        xaxis = dict(title='Probability'),
         yaxis = dict(title='Count'),
 
         margin = dict(
-            l = 50,
+            l = 55,
             r = 0,
             b = 45,
             t = 45
@@ -544,8 +537,7 @@ def proteinResults():
 
     fig = go.Figure(data=data, layout=layout)
 
-    obsFrqHistDiv = plot(fig, output_type='div')
-    ''' 
+    pairFrqHistDiv = plot(fig, output_type='div')
 
 
     return render_template('proteinResults.html',
@@ -558,7 +550,9 @@ def proteinResults():
                             texStructuralPDF = texStructuralPDF,
                             asciiTree = asciiTree,
                             graphicTree = graphicTreeFile,
-                            singleLtrFrqDiv = singleLtrFrqDiv)
+                            singleLtrFrqDiv = singleLtrFrqDiv,
+                            pairFrqHtMpDiv = pairFrqHtMpDiv,
+                            pairFrqHistDiv = pairFrqHistDiv)
 
 
 
