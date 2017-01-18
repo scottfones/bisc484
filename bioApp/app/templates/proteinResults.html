@@ -285,9 +285,31 @@
 	    <hr>
 	    {{pairFrqHtMpDiv|safe}}
 	    <hr>
-	    {{pairFrqHistDiv|safe}}
-	    <hr>
 	    {{scoreMatDiv|safe}}
+
+            <!-- Button trigger modal -->
+            <button type="button" style="width:700px;" class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#myModal">
+              Get Matrix as Text
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Substitution Matrix</h4>
+                  </div>
+                  <div class="modal-body">
+                    {{scoreTable|safe}}   
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div> 
+
 	</div>
 
       </div>

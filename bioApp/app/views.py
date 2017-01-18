@@ -30,22 +30,6 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 ABS_TMP = os.path.join(APP_ROOT, 'static/tmp/')
 
 
-'''
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    
-    if form.validate_on_submit():
-        flash('Login requested for OpenID="%s", remember_me=%s' %
-              (form.openid.data, str(form.remember_me.data)))
-        return redirect('/index')
-   
-    return render_template('login.html', 
-                            title='Sign In',
-                            form=form,
-                            providers=app.config['OPENID_PROVIDERS'])
-'''
-
 @app.route('/proteinInput', methods=['GET', 'POST'])
 def proteinInput():
 
@@ -146,9 +130,8 @@ def proteinResults():
     alignFile = ABS_TMP + userID + '.afa'
     treeFile = ABS_TMP + userID + '.dnd'
 
-#    clustalomega_cline = ClustalOmegaCommandline(infile=seqFile, outfile=alignFile, guidetree_out=treeFile, outfmt="clu", outputorder='tree-order', force=True)
-#    clustalomega_cline()
-
+    #clustalomega_cline = ClustalOmegaCommandline(infile=seqFile, outfile=alignFile, guidetree_out=treeFile, outfmt="clu", outputorder='tree-order', force=True)
+    #clustalomega_cline()
 
     clustalw_cline = ClustalwCommandline("clustalw2", infile=seqFile, outfile=alignFile, newtree=treeFile, outorder="aligned", align=True)
     clustalw_cline()
@@ -460,13 +443,13 @@ def proteinResults():
                     x = proteinKeys[m],
                     y = proteinKeys[n],
                     xref = 'x1', yref= 'y1',
-                    font = dict(color='#E0E0E0'if val < 0.035 else 'black', size=6),
+                    font = dict(color='#E0E0E0'if val < 0.035 else 'black', size=8),
                     showarrow = False)
             )
   
     colorscale = 'Viridis'
     
-    trace = go.Heatmap(x=proteinKeys, y=proteinKeys, z=obsFrq_z, colorscale=colorscale, showscale=True)
+    trace = go.Heatmap(x=proteinKeys, y=proteinKeys, z=obsFrq_z, colorscale=colorscale, showscale=False)
 
     fig = go.Figure(data=[trace])
     fig['layout'].update(
@@ -482,7 +465,6 @@ def proteinResults():
             type = 'category',
             ticks='', side='bottom',
             showgrid=False,
-            title = 'Residue 1'
         ),
         yaxis = dict(
             range = [19.5,-0.5],
@@ -490,11 +472,10 @@ def proteinResults():
             showgrid=False,
             ticks='', ticksuffix='  ',
             type = 'category',
-            title = 'Residue 2'
         ),
 
         margin = dict(
-            l = 55,
+            l = 25,
             r = 0,
             b = 45,
             t = 45
@@ -503,47 +484,8 @@ def proteinResults():
 
     pairFrqHtMpDiv = plot(fig, output_type='div')
 
-    # Generate Pairwise Probability Histogram
-    obsFrqList = []
 
-    for row in obsFrq_z:
-        obsFrqList.extend(row)
-
-    data = [
-        go.Histogram(
-            x = obsFrqList,
-            autobinx = False,
-            xbins = dict(
-                start = 0,
-                end = 0.069,
-                size = 0.001
-            )
-        )
-    ]
-
-    layout = go.Layout(
-        title = 'Pairwise Probability Histogram',
-        width = 700,
-        height = 500,
-        autosize = False,
-
-        xaxis = dict(title='Probability'),
-        yaxis = dict(title='Count'),
-
-        margin = dict(
-            l = 55,
-            r = 0,
-            b = 45,
-            t = 45
-        )
-    )
-
-    fig = go.Figure(data=data, layout=layout)
-
-    pairFrqHistDiv = plot(fig, output_type='div')
-
-
-    # Calculate Scoring Matrix
+    # Calculate Substitution Matrix
     lambdaValue = 0.347
     scoreMat_z = []
 
@@ -551,7 +493,16 @@ def proteinResults():
         rowList = []
 
         for y_i in range(0,(x_i+1)):
-            rowList.append( round( (1/lambdaValue) * np.log( obsFrqMat[(proteinKeys[y_i],xPro)] / (resFrqs[xPro] * resFrqs[proteinKeys[y_i]]) )))
+            if ( obsFrqMat[(proteinKeys[y_i],xPro)] == 0 ):
+                rowList.append(-4)    ########### MIN VALUE THRESHOLD
+            else:
+                newSubValue = round( (1/lambdaValue) * np.log( obsFrqMat[(proteinKeys[y_i],xPro)] / (resFrqs[xPro] * resFrqs[proteinKeys[y_i]]) ))
+
+                if ( newSubValue < -4 ):    ############ MIN VALUE THRESHOLD
+                   newSubValue = -4 
+
+                rowList.append(newSubValue)
+
 
         scoreMat_z.append(rowList)
     
@@ -564,12 +515,11 @@ def proteinResults():
 
             annotations.append(
                 dict(
-                    text = '%g' % val,
-                    #text = str(val),
+                    text = '%g' % val if val != '-0' else '0',
                     x = proteinKeys[m],
                     y = proteinKeys[n],
                     xref = 'x1', yref= 'y1',
-                    font = dict(color='#E0E0E0'if val < 5 else 'black', size=12),
+                    font = dict(color='#E0E0E0'if val < 4 else 'black', size=12),
                     showarrow = False)
             )
 
@@ -579,7 +529,7 @@ def proteinResults():
 
     fig = go.Figure(data=[trace])
     fig['layout'].update(
-        title = "Scoring Matrix Heatmap",
+        title = 'Substitution Matrix Heatmap',
         annotations=annotations,
         width = 700,
         height = 700,
@@ -591,7 +541,7 @@ def proteinResults():
             type = 'category',
             ticks='', side='bottom',
             showgrid=False,
-            title = 'Residue 1'
+            #title = 'Residue 1'
         ),
         yaxis = dict(
             range = [19.5,-0.5],
@@ -599,11 +549,11 @@ def proteinResults():
             showgrid=False,
             ticks='', ticksuffix='  ',
             type = 'category',
-            title = 'Residue 2'
+            #title = 'Residue 2'
         ),
 
         margin = dict(
-            l = 55,
+            l = 25,
             r = 0,
             b = 45,
             t = 45
@@ -611,6 +561,46 @@ def proteinResults():
     )
 
     scoreMatDiv = plot(fig, output_type='div')
+
+
+    # Translate Scoring Matrix to Text
+    #scoreTxtMat = np.zeros((20,20))
+    #scoreTxtMat = scoreTxtMat + np.array(scoreMat_z)
+
+    for i,row in enumerate(scoreMat_z):
+        scoreMat_z[i].extend(np.zeros(20-i))
+
+    scoreTxtMat = np.array(scoreMat_z)
+
+    sm_rows,sm_cols = np.triu_indices(len(scoreTxtMat),1)
+    
+    scoreTxtMat[sm_rows,sm_cols] = scoreTxtMat[sm_cols,sm_rows]
+
+    scoreTxtMat = np.delete(scoreTxtMat,20,1)
+    scoreTxtMat = scoreTxtMat.tolist()
+
+    for i,row in enumerate(scoreTxtMat):
+        for j,num in enumerate(row):
+            scoreTxtMat[i][j] = str(int(num))
+        scoreTxtMat[i].insert(0,proteinKeys[i])
+
+    scoreTable = []
+
+    scoreTable.append('<table class="table table-condensed table-responsive"><tr><td></td>')
+    
+    for letter in proteinKeys:
+        scoreTable.append('<td>' + letter + '</td>')
+
+    scoreTable.append('</tr>')
+
+    for row in scoreTxtMat:
+        scoreTable.append('<tr>')
+        for element in row:
+            scoreTable.append('<td>' + element + '</td>')
+        scoreTable.append('</tr>')
+
+    scoreTable.append('</table>')
+    scoreTable = ' '.join(scoreTable)
 
 
 
@@ -626,8 +616,8 @@ def proteinResults():
                             graphicTree = graphicTreeFile,
                             singleLtrFrqDiv = singleLtrFrqDiv,
                             pairFrqHtMpDiv = pairFrqHtMpDiv,
-                            pairFrqHistDiv = pairFrqHistDiv,
-                            scoreMatDiv = scoreMatDiv)
+                            scoreMatDiv = scoreMatDiv,
+                            scoreTable = scoreTable)
 
 
 
