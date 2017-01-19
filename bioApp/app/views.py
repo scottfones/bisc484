@@ -515,11 +515,11 @@ def proteinResults():
 
             annotations.append(
                 dict(
-                    text = '%g' % val if val != '-0' else '0',
+                    text = '%i' % val,
                     x = proteinKeys[m],
                     y = proteinKeys[n],
                     xref = 'x1', yref= 'y1',
-                    font = dict(color='#E0E0E0'if val < 4 else 'black', size=12),
+                    font = dict(color='#E0E0E0'if val < 5 else 'black', size=12),
                     showarrow = False)
             )
 
