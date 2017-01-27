@@ -1,5 +1,5 @@
 # FLASK IMPORTS
-from flask import render_template, flash, redirect, request, make_response, url_for
+from flask import render_template, flash, redirect, request, make_response
 from app import app
 from .forms import LoginForm, ProteinInputForm
 from werkzeug.utils import secure_filename
@@ -131,58 +131,6 @@ def proteinInput():
                             form1 = form1)
 
 
-def getAccessionList():
-    # Read and Format Accession Values from Cookie
-    accessionList = request.cookies.get('accessionValues')
-    accessionList = accessionList.split('+')
-
-    # Read User UUID
-    userID = request.cookies.get('uuid')
-
-    # Accession Look Up
-    Entrez.email = "sfones@udel.edu"
-    sequenceList = []
-
-    for accessionValue in accessionList:
-        try:
-            record = SeqIO.read(Entrez.efetch(db="protein", id=accessionValue, rettype="fasta", retmode="text"), "fasta")
-        except:
-            flash(u'Accession Value Error', 'error')
-            return(redirect('/proteinInput'))
-
-        tmpDesc = record.description.split( )
-        record.name = "_".join(tmpDesc[1:-2])
-        record.description = "_".join(tmpDesc)
-
-        sequenceList.append(record)
-
-
-    # Construct Sequence List 
-    alignmentList = []
-
-    for record in sequenceList:
-
-        alignmentList.append('>' + str(record.name))
-        alignmentList.append(str(record.seq))
-
-    alignmentInput = "\n".join(alignmentList)
-
-
-    # Create Sequence File
-    seqFile = ABS_TMP + userID + '.faa'
-
-    f = open(seqFile, 'w')
-
-    for record in sequenceList:
-
-        f.write('> ' + record.name + '\n')
-        f.write(str(record.seq) + '\n')
-
-    f.close()
-
-    return sequenceList
-
-
 
 @app.route('/proteinResults')
 def proteinResults():
@@ -208,7 +156,49 @@ def proteinResults():
         f.close()
 
     else:
-        sequenceList = getAccessionList() 
+        accessionList = accessionList.split('+')
+
+        # Accession Look Up
+        Entrez.email = "sfones@udel.edu"
+        sequenceList = []
+
+        for accessionValue in accessionList:
+            try:
+                record = SeqIO.read(Entrez.efetch(db="protein", id=accessionValue, rettype="fasta", retmode="text"), "fasta")
+            except:
+                flash(u'Accession Value Error', 'error')
+                return redirect('/proteinInput')
+
+            tmpDesc = record.description.split( )
+            record.name = "_".join(tmpDesc[1:-2])
+            record.description = "_".join(tmpDesc)
+
+            sequenceList.append(record)
+
+
+        # Construct Sequence List 
+        alignmentList = []
+
+        for record in sequenceList:
+
+            alignmentList.append('>' + str(record.name))
+            alignmentList.append(str(record.seq))
+
+        alignmentInput = "\n".join(alignmentList)
+
+
+        # Create Sequence File
+        seqFile = ABS_TMP + userID + '.faa'
+
+        f = open(seqFile, 'w')
+
+        for record in sequenceList:
+
+            f.write('> ' + record.name + '\n')
+            f.write(str(record.seq) + '\n')
+
+        f.close() 
+
 
     # Create Alignment and Tree File
     alignFile = ABS_TMP + userID + '.afa'
@@ -219,7 +209,7 @@ def proteinResults():
     try:
         clustalw_cline()
     except:
-        flash(u'Alignment Error: Check formatting.(Spaces in names? All names unique?)','error')
+        flash(u'Alignment Error: Check formatting (Spaces in names? All names unique?)','error')
         return(redirect('/proteinInput'))
         
     
