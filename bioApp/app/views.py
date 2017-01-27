@@ -1,7 +1,9 @@
 # FLASK IMPORTS
-from flask import render_template, flash, redirect, request, make_response
+from flask import render_template, flash, redirect, request, make_response, url_for
 from app import app
 from .forms import LoginForm, ProteinInputForm
+from werkzeug.utils import secure_filename
+
 
 # 'PYTHON' IMPORTS
 import os
@@ -30,14 +32,25 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 ABS_TMP = os.path.join(APP_ROOT, 'static/tmp/')
 
 
+# Config for File Uploads
+UPLOAD_FOLDER = 'static/tmp/' 
+ALLOWED_EXTENSIONS = set(['txt', 'fasta', 'faa'])
+
+
+# Check if uploaded file is of allowed type
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 @app.route('/proteinInput', methods=['GET', 'POST'])
 def proteinInput():
 
-    form = ProteinInputForm()
+    form1 = ProteinInputForm()
 
-    if form.validate_on_submit():
+    if form1.validate_on_submit():
     
-        formList = form.accessionInput.data.split( )
+        formList = form1.accessionInput.data.split( )
 
         cookieExpireDate = datetime.datetime.now()
         cookieExpireDate = cookieExpireDate + datetime.timedelta(days=90)
@@ -58,6 +71,47 @@ def proteinInput():
 
         return accessionRedirect
 
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file found')
+            return redirect(request.url)
+
+        file = request.files['file']
+
+        if file.filename == '':
+            flash('No file selected')
+            return(redirect(request.url))
+
+        if file and allowed_file(file.filename):
+
+            cookieExpireDate = datetime.datetime.now()
+            cookieExpireDate = cookieExpireDate + datetime.timedelta(days=90)
+
+            accessionRedirect = make_response(redirect('/proteinResults'))
+            accessionRedirect.set_cookie('accessionValues', 'file', expires=cookieExpireDate)
+
+            userID = request.cookies.get('uuid')
+
+            if userID is None:
+                userID = str(uuid.uuid4())
+                accessionRedirect.set_cookie('uuid', userID, expires=cookieExpireDate)
+            else:
+                for oldFile in glob.glob(ABS_TMP + userID + '*'):
+                    os.remove(oldFile)
+
+                userID = str(uuid.uuid4())
+                accessionRedirect.set_cookie('uuid', userID, expires=cookieExpireDate)
+
+            #filename = secure_filename(file.filename)
+
+            file.save(ABS_TMP + userID + '.faa')
+
+            
+     
+            return accessionRedirect
+
+
+
     if os.path.isfile(APP_ROOT + '/static/protein/accessionValues.txt'):
 
         inFile = open(APP_ROOT + '/static/protein/accessionValues.txt', 'r')
@@ -70,16 +124,14 @@ def proteinInput():
 
         accessionList = "\n".join(accessionValues)
 
-        form = ProteinInputForm(accessionInput = accessionList)
+        form1 = ProteinInputForm(accessionInput = accessionList)
 
     return render_template('proteinInput.html',
-                            title='Protein Input',
-                            form=form)
+                            title = 'Protein Input',
+                            form1 = form1)
 
 
-@app.route('/proteinResults')
-def proteinResults():
-
+def getAccessionList():
     # Read and Format Accession Values from Cookie
     accessionList = request.cookies.get('accessionValues')
     accessionList = accessionList.split('+')
@@ -92,9 +144,12 @@ def proteinResults():
     sequenceList = []
 
     for accessionValue in accessionList:
-    
-        record = SeqIO.read(Entrez.efetch(db="protein", id=accessionValue, rettype="fasta", retmode="text"), "fasta")
-        
+        try:
+            record = SeqIO.read(Entrez.efetch(db="protein", id=accessionValue, rettype="fasta", retmode="text"), "fasta")
+        except:
+            flash(u'Accession Value Error', 'error')
+            return(redirect('/proteinInput'))
+
         tmpDesc = record.description.split( )
         record.name = "_".join(tmpDesc[1:-2])
         record.description = "_".join(tmpDesc)
@@ -106,16 +161,16 @@ def proteinResults():
     alignmentList = []
 
     for record in sequenceList:
-        
+
         alignmentList.append('>' + str(record.name))
         alignmentList.append(str(record.seq))
-    
+
     alignmentInput = "\n".join(alignmentList)
 
 
     # Create Sequence File
-    seqFile = ABS_TMP + userID + '.faa' 
-    
+    seqFile = ABS_TMP + userID + '.faa'
+
     f = open(seqFile, 'w')
 
     for record in sequenceList:
@@ -125,17 +180,49 @@ def proteinResults():
 
     f.close()
 
+    return sequenceList
+
+
+
+@app.route('/proteinResults')
+def proteinResults():
+    
+    # Read User UUID
+    userID = request.cookies.get('uuid')
+    seqFile = ABS_TMP + userID + '.faa'
+    sequenceList = []
+
+    accessionList = request.cookies.get('accessionValues')
+    
+    if accessionList ==  'file':
+        with open(seqFile, 'r') as fileInput:
+            for record in SeqIO.parse(fileInput, 'fasta'):
+                sequenceList.append(record)
+
+        f = open(seqFile, 'w')
+
+        for record in sequenceList:
+            f.write('> ' + record.name + '\n')
+            f.write(str(record.seq) + '\n')
+
+        f.close()
+
+    else:
+        sequenceList = getAccessionList() 
 
     # Create Alignment and Tree File
     alignFile = ABS_TMP + userID + '.afa'
     treeFile = ABS_TMP + userID + '.dnd'
 
-    #clustalomega_cline = ClustalOmegaCommandline(infile=seqFile, outfile=alignFile, guidetree_out=treeFile, outfmt="clu", outputorder='tree-order', force=True)
-    #clustalomega_cline()
-
     clustalw_cline = ClustalwCommandline("clustalw2", infile=seqFile, outfile=alignFile, newtree=treeFile, outorder="aligned", align=True)
-    clustalw_cline()
-
+    
+    try:
+        clustalw_cline()
+    except:
+        flash(u'Alignment Error: Check formatting.(Spaces in names? All names unique?)','error')
+        return(redirect('/proteinInput'))
+        
+    
     # Generate and Format Alignments
     alphabet = Alphabet.Gapped(IUPAC.protein)
     alignment = AlignIO.read(alignFile, "clustal", len(sequenceList), alphabet)
@@ -371,65 +458,7 @@ def proteinResults():
 
         obsFrq_z.append(rowList)
 
-    '''    
-    # Generate 3d plot
 
-    trace1 = go.Scatter3d(
-        x = accRep_x,
-        y = accRep_y,
-        z = accRep_z,
-       
-        mode = 'markers',
-
-        marker = dict(
-            size = 6,
-            color = accRep_z,
-            symbol = 'circle-dot',
-            colorscale = 'Viridis',
-            opacity = 0.8
-        )
-    )
-    
-    data = [trace1]
-    layout = go.Layout(
-        autosize = False,
-        width = 700,
-        height = 500,
-
-        title = 'Accepted Replacement Counts',
-
-        scene = dict(
-            xaxis = dict(
-                title = 'Residue 1',
-                showgrid = True,
-                dtick = 1
-            ),
-
-            yaxis = dict(
-                title = 'Residue 2',
-                showgrid = True,
-                dtick = 1
-            ),
-
-            zaxis = dict(
-                title = 'Count',
-                showgrid = True,
-                dtick = 100
-            ),
-        ),
-
-        margin = dict(
-            l = 0,
-            r = 0,
-            b = 0,
-            t = 30
-        )
-    )
-
-    fig = go.Figure(data=data, layout=layout)
-    
-    pairPlotPlotDiv = plot(fig, output_type='div')
-    '''
     # Generate Pairwise Probability Heatmap
     annotations = []
 

@@ -7,13 +7,21 @@
 
     <div class="pull-right">    
     <form action="" method="post" name="AccessionVals">
-    {{ form.hidden_tag() }}
+    {{ form1.hidden_tag() }}
 
-    {{ form.accessionInput( class="form-control", style="height:464px;" ) }}
+    {{ form1.accessionInput( class="form-control", style="height:444px;" ) }}
 	
     <input class="btn btn-primary btn-block" type="submit" value="Submit">
 
     </form>
+
+    <form method=post enctype=multipart/form-data>
+      <span>
+      <input class='pull-left btn btn-xs' type=file name=file>
+      <input class='btn btn-primary btn-xs' type=submit value=Upload>
+      </span>
+    </form>
+
     </div>
 
     <div class="well well-sm">
