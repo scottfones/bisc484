@@ -310,7 +310,7 @@ def proteinResults():
     tree = Phylo.read(treeFile, "newick")
    
     # re-root tree 
-    leghemeClade = tree.find_clades(name='leghemoglobin') 
+    leghemeClade = tree.find_clades({'name':'.*leghemoglobin.*'}) 
     tree.root_with_outgroup(leghemeClade)
     
     asciiTreeFile = ABS_TMP + userID + '_asciiTree.txt'
@@ -337,7 +337,7 @@ def proteinResults():
 
     matplotlib.rc('font', size=24)
     matplotlib.rc('lines', linewidth=4.0)
-    pylab.rcParams['figure.figsize'] = 15, 10
+    pylab.rcParams['figure.figsize'] = 25, 20
     pylab.rcParams['figure.autolayout'] = True
     pylab.rcParams['savefig.bbox'] = 'tight'
     Phylo.draw(tree, do_show=False, axes=None)
