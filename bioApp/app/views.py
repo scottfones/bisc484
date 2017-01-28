@@ -312,7 +312,7 @@ def proteinResults():
     # re-root tree 
     leghemeClade = tree.find_clades({'name':'.*leghemoglobin.*'}) 
     tree.root_with_outgroup(leghemeClade)
-   
+    ''' 
     alphaMRCA = tree.common_ancestor({'name':'.*zeta.*'}, {'name':'.*mu.*'})
     alphaMRCA.color = 'red'
     
@@ -330,6 +330,58 @@ def proteinResults():
     neuroClades = tree.find_clades({'name':'.*neuro.*'})
     for clade in neuroClades:
         clade.color = 'green'
+    '''
+
+    terminalClades = tree.get_terminals()
+    alphaClades = []
+    betaClades = []
+    cytoClades = []
+    myoClades = []
+    neuroClades = []
+
+    for clade in terminalClades:
+        if 'alpha' in clade.name:
+            alphaClades.append(clade.name) 
+        if 'theta' in clade.name:
+            alphaClades.append(clade.name) 
+        if 'mu' in clade.name:
+            alphaClades.append(clade.name) 
+        if 'zeta' in clade.name:
+            alphaClades.append(clade.name) 
+        if 'beta' in clade.name:
+            betaClades.append(clade.name) 
+        if 'gamma' in clade.name:
+            betaClades.append(clade.name) 
+        if 'delta' in clade.name:
+            betaClades.append(clade.name) 
+        if 'epsilon' in clade.name:
+            betaClades.append(clade.name) 
+        if 'cyto' in clade.name:
+            cytoClades.append(clade.name)
+        if 'myo' in clade.name:
+            myoClades.append(clade.name)
+        if 'neuro' in clade.name:
+            neuroClades.append(clade.name)
+
+    for clade in alphaClades:
+        mrca = tree.common_ancestor({'name':alphaClades[0]}, {'name':clade})
+        mrca.color = 'red'
+
+    for clade in betaClades:
+        mrca = tree.common_ancestor({'name':betaClades[0]}, {'name':clade})
+        mrca.color = 'blue'
+
+    for clade in cytoClades:
+        mrca = tree.common_ancestor({'name':cytoClades[0]}, {'name':clade})
+        mrca.color = '#ff9900'
+
+    for clade in myoClades:
+        mrca = tree.common_ancestor({'name':myoClades[0]}, {'name':clade})
+        mrca.color = 'brown'
+
+    for clade in neuroClades:
+        mrca = tree.common_ancestor({'name':neuroClades[0]}, {'name':clade})
+        mrca.color = 'green'
 
     asciiTreeFile = ABS_TMP + userID + '_asciiTree.txt'
     asciiTree = []
