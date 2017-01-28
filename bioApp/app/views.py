@@ -676,19 +676,23 @@ def proteinResults():
     for i in range(20):
         if i == 0:
             resTypeMat.append(20*[0])
-        if i > 0 and i <= 5:
+        if i > 0 and i <= 3:
             resTypeMat.append(20*[2])
+        if i > 3 and i <= 5:
+            resTypeMat.append(20*[3])
         if i > 5 and i <= 9:
-            resTypeMat.append(20*[4])
-        if i > 9 and i <= 12:
+            resTypeMat.append(20*[5])
+        if i == 10:
             resTypeMat.append(20*[6])
-        if i > 12 and i <= 16:
+        if i > 10 and i <= 15:
+            resTypeMat.append(20*[7])
+        if i > 15 and i <= 18:
             resTypeMat.append(20*[8])
-        if i > 16:
+        if i == 19:
             resTypeMat.append(20*[10])
            
-    resTypeKeys = ['C', 'S', 'T', 'P', 'A', 'G', 'N', 'D', 'E', 'Q', 
-                   'H', 'R', 'K', 'M', 'I', 'L', 'V', 'F', 'Y', 'W'] 
+    resTypeKeys = ['C', 'R', 'K', 'H', 'E', 'D', 'Q', 'N', 'T', 'S', 
+                   'G', 'A', 'V', 'I', 'L', 'M', 'F', 'Y', 'W', 'P'] 
             
     resTypeAnn = []
 
@@ -711,20 +715,24 @@ def proteinResults():
         rowList = []
 
         for y_i in range(0,(x_i+1)):
-            resTypeVal = resTypeMat[x_i][y_i]
+            resTypeVal = resTypeMat[x_i][0]
 
             if resTypeVal == 0:
-                resHovDesc = 'Special Case, Hydrophilic'
+                resHovDesc = 'Hydrophilic, Special Case'
             if resTypeVal == 2:
-                resHovDesc = 'Small, Hydrophilic'
-            if resTypeVal == 4:
-                resHovDesc = 'Acidic, Hyrophilic'
+                resHovDesc = 'Hydrophilic, Basic'
+            if resTypeVal == 3:
+                resHovDesc = 'Hydrophilic, Acidic'
+            if resTypeVal == 5:
+                resHovDesc = 'Hydrophilic, Polar'
             if resTypeVal == 6:
-                resHovDesc = 'Basic, Hydrophilic'
+                resHovDesc = 'No Side Chain'
+            if resTypeVal == 7:
+                resHovDesc = 'Hydrophobic, Aliphatic'
             if resTypeVal == 8:
-                resHovDesc = 'Small, Hydrophobic'
+                resHovDesc = 'Hydrophobic, Aromatic'
             if resTypeVal == 10:
-                resHovDesc = 'Aromatic, Hydrophobic'
+                resHovDesc = 'Hydrophobic, Special Case'
 
             rowList.append(xPro + ', ' + resTypeKeys[y_i] + ': ' + str(resTypeAnn[x_i][y_i]) + '<br>' + xPro + ': ' + resHovDesc)
 
@@ -736,6 +744,19 @@ def proteinResults():
     for n, row in enumerate(resTypeAnn):
         for m, val in enumerate(row):
             var = resTypeAnn[n][m]
+            
+            resCat = resTypeMat[n][0]
+            if resCat == 0:
+                preColor = '#F0F0F0'
+            elif resCat > 0 and resCat < 6:
+                preColor = '#E0E0E0'
+            elif resCat == 6:
+                preColor = '#D0D0D0'
+            elif resCat > 6 and resCat <10:
+                preColor = '#303030'
+            elif resCat == 10:
+                preColor = '#101010'
+
 
             annotations.append(
                 dict(
@@ -743,7 +764,9 @@ def proteinResults():
                     x = resTypeKeys[m],
                     y = resTypeKeys[n],
                     xref = 'x1', yref= 'y1',
-                    font = dict(color='#E0E0E0'if resTypeMat[n][m] < 8 else '#222222', size=12),
+                    font = dict(
+                       color = preColor, 
+                       size=12),
                     showarrow = False) 
                 )
 
