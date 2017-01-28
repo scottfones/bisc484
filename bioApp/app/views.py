@@ -589,7 +589,7 @@ def proteinResults():
                     x = proteinKeys[m],
                     y = proteinKeys[n],
                     xref = 'x1', yref= 'y1',
-                    font = dict(color='#E0E0E0'if val < 5 else 'black', size=12),
+                    font = dict(color='#E0E0E0'if val < 5 else '#222222', size=12),
                     showarrow = False)
             )
 
@@ -634,16 +634,13 @@ def proteinResults():
 
 
     # Translate Scoring Matrix to Text
-    #scoreTxtMat = np.zeros((20,20))
-    #scoreTxtMat = scoreTxtMat + np.array(scoreMat_z)
-
     for i,row in enumerate(scoreMat_z):
         scoreMat_z[i].extend(np.zeros(20-i))
 
     scoreTxtMat = np.array(scoreMat_z)
 
     sm_rows,sm_cols = np.triu_indices(len(scoreTxtMat),1)
-    
+
     scoreTxtMat[sm_rows,sm_cols] = scoreTxtMat[sm_cols,sm_rows]
 
     scoreTxtMat = np.delete(scoreTxtMat,20,1)
@@ -657,7 +654,7 @@ def proteinResults():
     scoreTable = []
 
     scoreTable.append('<table class="table table-condensed table-responsive"><tr><td></td>')
-    
+
     for letter in proteinKeys:
         scoreTable.append('<td>' + letter + '</td>')
 
@@ -672,7 +669,123 @@ def proteinResults():
     scoreTable.append('</table>')
     scoreTable = ' '.join(scoreTable)
 
+ 
+    # Generate Substitution Matrix by Residue Type
+    resTypeMat = []
 
+    for i in range(20):
+        if i == 0:
+            resTypeMat.append(20*[0])
+        if i > 0 and i <= 5:
+            resTypeMat.append(20*[2])
+        if i > 5 and i <= 9:
+            resTypeMat.append(20*[4])
+        if i > 9 and i <= 12:
+            resTypeMat.append(20*[6])
+        if i > 12 and i <= 16:
+            resTypeMat.append(20*[8])
+        if i > 16:
+            resTypeMat.append(20*[10])
+           
+    resTypeKeys = ['C', 'S', 'T', 'P', 'A', 'G', 'N', 'D', 'E', 'Q', 
+                   'H', 'R', 'K', 'M', 'I', 'L', 'V', 'F', 'Y', 'W'] 
+            
+    resTypeAnn = []
+
+    for x_i, xPro in enumerate(resTypeKeys):
+        rowList = []
+
+        for y_i in range(0,(x_i+1)):
+            yPro = resTypeKeys[y_i]
+
+            transX = proteinKeys.index(xPro) 
+            transY = proteinKeys.index(yPro) + 1
+
+            rowList.append(int(scoreTxtMat[transX][transY]))
+
+        resTypeAnn.append(rowList)
+
+    hover = []
+
+    for x_i, xPro in enumerate(resTypeKeys):
+        rowList = []
+
+        for y_i in range(0,(x_i+1)):
+            resTypeVal = resTypeMat[x_i][y_i]
+
+            if resTypeVal == 0:
+                resHovDesc = 'Special Case, Hydrophilic'
+            if resTypeVal == 2:
+                resHovDesc = 'Small, Hydrophilic'
+            if resTypeVal == 4:
+                resHovDesc = 'Acidic, Hyrophilic'
+            if resTypeVal == 6:
+                resHovDesc = 'Basic, Hydrophilic'
+            if resTypeVal == 8:
+                resHovDesc = 'Small, Hydrophobic'
+            if resTypeVal == 10:
+                resHovDesc = 'Aromatic, Hydrophobic'
+
+            rowList.append(xPro + ', ' + resTypeKeys[y_i] + ': ' + str(resTypeAnn[x_i][y_i]) + '<br>' + xPro + ': ' + resHovDesc)
+
+        hover.append(rowList)
+
+
+    annotations = []
+
+    for n, row in enumerate(resTypeAnn):
+        for m, val in enumerate(row):
+            var = resTypeAnn[n][m]
+
+            annotations.append(
+                dict(
+                    text = '%i' % val,
+                    x = resTypeKeys[m],
+                    y = resTypeKeys[n],
+                    xref = 'x1', yref= 'y1',
+                    font = dict(color='#E0E0E0'if resTypeMat[n][m] < 8 else '#222222', size=12),
+                    showarrow = False) 
+                )
+
+    colorscale = 'Viridis'
+
+    trace = go.Heatmap(x=resTypeKeys, y=resTypeKeys, z=resTypeMat, text=hover, hoverinfo='text', colorscale=colorscale, showscale=False)
+
+    fig = go.Figure(data=[trace])
+    fig['layout'].update(
+        #title = 'Substitution Matrix Heatmap<br>Residues By Type',
+        annotations=annotations,
+        width = 500,
+        height = 500,
+        autosize = False,
+
+        xaxis = dict(
+            range = [-0.5,19.5],
+            autorange =  True,
+            type = 'category',
+            ticks='', side='bottom',
+            showgrid=False,
+            #title = 'Residue 1'
+        ),
+        yaxis = dict(
+            range = [19.5,-0.5],
+            autorange = True,
+            showgrid=False,
+            ticks='', ticksuffix='  ',
+            type = 'category',
+            #title = 'Residue 2'
+        ),
+
+        margin = dict(
+            l = 25,
+            r = 0,
+            b = 45,
+            t = 0)
+    )
+
+    resTypeDiv = plot(fig, output_type='div')
+
+    
 
     return render_template('proteinResults.html',
                             title='Protein Results',
@@ -687,6 +800,7 @@ def proteinResults():
                             singleLtrFrqDiv = singleLtrFrqDiv,
                             pairFrqHtMpDiv = pairFrqHtMpDiv,
                             scoreMatDiv = scoreMatDiv,
+                            resTypeDiv = resTypeDiv,
                             scoreTable = scoreTable)
 
 
