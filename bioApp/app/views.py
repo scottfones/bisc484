@@ -321,27 +321,27 @@ def proteinResults():
     neuroClades = []
 
     for clade in terminalClades:
-        if 'alpha' in clade.name:
+        if 'alpha' in clade.name.lower():
             alphaClades.append(clade.name) 
-        if 'theta' in clade.name:
+        if 'theta' in clade.name.lower():
             alphaClades.append(clade.name) 
-        if 'mu' in clade.name:
+        if 'mu' in clade.name.lower():
             alphaClades.append(clade.name) 
-        if 'zeta' in clade.name:
+        if 'zeta' in clade.name.lower():
             alphaClades.append(clade.name) 
-        if 'beta' in clade.name:
+        if 'beta' in clade.name.lower():
             betaClades.append(clade.name) 
-        if 'gamma' in clade.name:
+        if 'gamma' in clade.name.lower():
             betaClades.append(clade.name) 
-        if 'delta' in clade.name:
+        if 'delta' in clade.name.lower():
             betaClades.append(clade.name) 
-        if 'epsilon' in clade.name:
+        if 'epsilon' in clade.name.lower():
             betaClades.append(clade.name) 
-        if 'cyto' in clade.name:
+        if 'cyto' in clade.name.lower():
             cytoClades.append(clade.name)
-        if 'myo' in clade.name:
+        if 'myo' in clade.name.lower():
             myoClades.append(clade.name)
-        if 'neuro' in clade.name:
+        if 'neuro' in clade.name.lower():
             neuroClades.append(clade.name)
 
     for clade in alphaClades:
