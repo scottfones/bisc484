@@ -312,25 +312,6 @@ def proteinResults():
     # re-root tree 
     leghemeClade = tree.find_clades({'name':'.*leghemoglobin.*'}) 
     tree.root_with_outgroup(leghemeClade)
-    ''' 
-    alphaMRCA = tree.common_ancestor({'name':'.*zeta.*'}, {'name':'.*mu.*'})
-    alphaMRCA.color = 'red'
-    
-    betaMRCA = tree.common_ancestor({'name':'.*epsilon.*'}, {'name':'.*delta.*'})
-    betaMRCA.color = 'blue'
-
-    cytoClades = tree.find_clades({'name':'.*cyto.*'})
-    for clade in cytoClades:
-        clade.color = '#ff9900'
-
-    myoClades = tree.find_clades({'name':'.*myo.*'})
-    for clade in myoClades:
-        clade.color = 'brown'
-
-    neuroClades = tree.find_clades({'name':'.*neuro.*'})
-    for clade in neuroClades:
-        clade.color = 'green'
-    '''
 
     terminalClades = tree.get_terminals()
     alphaClades = []
