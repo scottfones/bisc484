@@ -747,7 +747,7 @@ def proteinResults():
             
             resCat = resTypeMat[n][0]
             if resCat == 0:
-                preColor = '#F0F0F0'
+                preColor = '#FAFAFA'
             elif resCat > 0 and resCat < 6:
                 preColor = '#E0E0E0'
             elif resCat == 6:
@@ -755,7 +755,7 @@ def proteinResults():
             elif resCat > 6 and resCat <10:
                 preColor = '#303030'
             elif resCat == 10:
-                preColor = '#101010'
+                preColor = '#000000'
 
 
             annotations.append(
