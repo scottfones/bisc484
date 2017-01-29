@@ -109,7 +109,7 @@
       <div class="jumbotron">
 	{% with messages = get_flashed_messages() %}
 	{% if messages %}
-          <div class="alert alert-info alert-dismissable">
+          <div class="alert alert-danger alert-dismissable">
 
             {% for message in messages %}
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
