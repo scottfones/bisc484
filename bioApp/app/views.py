@@ -251,8 +251,8 @@ def proteinResults():
     
     texIdentityPDF = 'static/tmp/' + userID + '_identity.pdf'
 
-
     # Generate Latex Chemical Similarity Alignment
+    '''   OPTIMIZATION COMMENT
     texChemicalFile= ABS_TMP + userID + '_chemical.tex'
 
     with open(texChemicalFile, 'w') as texfile:
@@ -277,7 +277,7 @@ def proteinResults():
     os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texChemicalFile))
     
     texChemicalPDF = 'static/tmp/' + userID + '_chemical.pdf'    
-
+    '''
 
     # Generate Latex Structural Similarity Alignment
     texStructuralFile = ABS_TMP + userID + '_structural.tex'
@@ -719,19 +719,19 @@ def proteinResults():
 
             if resTypeVal == 0:
                 resHovDesc = 'Hydrophilic, Special Case'
-            if resTypeVal == 2:
+            elif resTypeVal == 2:
                 resHovDesc = 'Hydrophilic, Basic'
-            if resTypeVal == 3:
+            elif resTypeVal == 3:
                 resHovDesc = 'Hydrophilic, Acidic'
-            if resTypeVal == 5:
+            elif resTypeVal == 5:
                 resHovDesc = 'Hydrophilic, Polar'
-            if resTypeVal == 6:
+            elif resTypeVal == 6:
                 resHovDesc = 'No Side Chain'
-            if resTypeVal == 7:
+            elif resTypeVal == 7:
                 resHovDesc = 'Hydrophobic, Aliphatic'
-            if resTypeVal == 8:
+            elif resTypeVal == 8:
                 resHovDesc = 'Hydrophobic, Aromatic'
-            if resTypeVal == 10:
+            elif resTypeVal == 10:
                 resHovDesc = 'Hydrophobic, Special Case'
 
             rowList.append(xPro + ', ' + resTypeKeys[y_i] + ': ' + str(resTypeAnn[x_i][y_i]) + '<br>' + xPro + ': ' + resHovDesc)
@@ -816,7 +816,7 @@ def proteinResults():
                             alignmentClustal = alignmentClustal,
                             alignmentFASTA = alignmentFASTA,
                             texIdentityPDF = texIdentityPDF,
-                            texChemicalPDF = texChemicalPDF,
+                            #texChemicalPDF = texChemicalPDF,
                             texStructuralPDF = texStructuralPDF,
                             asciiTree = asciiTree,
                             graphicTree = graphicTreeFile,
