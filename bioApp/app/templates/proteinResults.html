@@ -1,346 +1,304 @@
 {% extends "base.html" %}
+{% block navbar %}
+<div id="navSpy"
+<ul class="navbar-nav ml-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="#seqList">Sequence List</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#msaClustal">MSA: Clustal</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#msaFASTA">MSA: FASTA</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#texIdentity">MSA Fig: Identity</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#texChemical">MSA Fig: Chemical</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#texStructural">MSA Fix: Structural</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#dendroASCII">Tree: ASCII</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#dendroGraphic">Tree: Graphic</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#subMat">Substitution Matrix</a>
+  </li>
+</ul>
+</div>
+{% endblock %}
+
+
 {% block content %}
-    <h2>Protein Results</h2>
-    
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-          Sequence List
-        </a>
-      </h4>
-    </div>
-    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-      <div class="panel-body">    
-        
-	<div class="well well-sm">
 
-          {% for record in sequenceList %}
-	  <div>
-		<p>
-		<b>ID: </b>{{record.id}}<br>
-		<b>Name: </b>{{record.name}}<br>
-		<b>Description: </b>{{record.description}}<br>
-		<b>Sequence: </b>
-		
-		<span class="bioSequence">
-		{{record.seq}}
-		</span>
-		</p>
-	  </div>
-          {% endfor %}
-   
-        </div>
+<div class="jumbotron">
+  <h1>Protein Results</h1>
+</div>
 
+
+<!-- Sequence List -->
+<div style="background-color:#fefefe;border-color:#492164;border-width:10px" class="card" id="seqList">
+  <h3 class="card-header">Sequence List</h3>
+
+  <div class="card-block">
+    {% for record in sequenceList %}
+      <div>
+        <p style="margin-bottom:15px;" class="card-text">
+          <b>ID: </b>{{record.id}}<br>
+          <b>Name: </b>{{record.name}}<br>
+          <b>Description: </b>{{record.description}}<br>
+          <b>Sequence: </b><samp style="word-break:break-all;word-wrap:break-word;">{{record.seq}}</samp>
+        </p>
       </div>
-    </div>
+    {% endfor %}
   </div>
+</div>  
 
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingTwo">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          MSA - Clustal Output
-        </a>
-      </h4>
-    </div>
-    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-      <div class="panel-body">
 
-        <div class="well well-sm">
+<!-- MSA: Clustal -->
+<div style="background-color:#fefefe;border-color:#42427f;border-width:10px" class="card" id="msaClustal">
+  <h3 class="card-header">MSA - Clustal Output</h3>
 
-	<pre class="bioSequence">{% for line in alignmentClustal %}
-{{line}}{% endfor %}
-	</pre>
+  <div class="card-block">
+    <pre><samp>{% for line in alignmentClustal %}
+{{line}}{% endfor %}</samp>
+    </pre>
 
-        </div>
+  </div>  
+</div> 
 
+
+<!-- MSA: FASTA-->
+<div style="background-color:#fefefe;border-color:#286289;border-width:10px" class="card" id="msaFASTA">
+  <h3 class="card-header">MSA - FASTA Output</h3>
+
+  <div class="card-block">
+    <pre><samp>{% for line in alignmentFASTA %}
+{{line}}{% endfor %}</samp>
+    </pre>
+
+  </div>
+</div>
+
+
+<!-- MSA Figure: Identity -->
+<div style="background-color:#fefefe;border-color:#007ebc;border-width:10px" class="card" id="texIdentity">
+  <h3 class="card-header">MSA Figure - Identity Highlighting</h3>
+
+  <div class="card-block">
+    <div class="row">
+      <div class="col-8">
+        <object data={{texIdentityPDF}} type="application/pdf" width="100%" height="500px"> 
+          <p>
+            There was a problem displaying the pdf. You can 
+            download it directly <a href={{texIdentityPDF}}>here</a>
+          </p>
+        </object>
       </div>
-    </div>
-  </div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingThree">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          MSA - FASTA Output
-        </a>
-      </h4>
-    </div>
-    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-      <div class="panel-body">
+      <div class="col-4">
+        <p class="card-text">
+          <b>LaTeX Code:</b><br>
+          \documentclass[preview]{standalone} <br>
+          \usepackage{texshade} <br>
+          \usepackage{inconsolata} <br>
+          \begin{document} <br>
+          \begin{texshade}{alignmentFile.aln} <br>
+          \shadingmode[allmatchspecial]{identical}  <br>
+          \showcaption[bottom]{\textbf{Protein MSA with Identity Highlighting}}  <br>
+          \hideconsensus  <br>
+          \namesfootnotesize  <br>
+          \residuesfootnotesize  <br>
+          \numberingscriptsize <br>
+          \showlegend  <br>
+          \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
+          \end{texshade}  <br>
+          \end{document} <br>
 
-        <div class="well well-sm">
-	<pre class="bioSequence">{% for line in alignmentFASTA %}
-{{line}}{% endfor %}
-	</pre>
-
-        </div>
-
+          <a class="btn btn-primary btn-block" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
+        </p>
       </div>
-    </div>
+    </div> <!-- row div -->
   </div>
+</div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingFour">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-          MSA Figure - Identity Highlighting
-        </a>
-      </h4>
-    </div>
-    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-      <div class="panel-body">
 
-        <div class="well well-sm">
-	    <p class="pull-right">
-	        <b>LaTeX Code:</b><br>
-		<span class="bioSequence" style="font-size:10px">
-		    \documentclass[preview]{standalone} <br>
-		    \usepackage{texshade} <br>
-		    \usepackage{inconsolata} <br>
-		    \begin{document} <br>
-		    \begin{texshade}{alignmentFile.aln} <br>
-		    \shadingmode[allmatchspecial]{identical}  <br>
-		    \showcaption[bottom]{\textbf{Protein MSA with Identity Highlighting}}  <br>
-		    \hideconsensus  <br>
-		    \namesfootnotesize  <br>
-		    \residuesfootnotesize  <br>
-		    \numberingscriptsize <br>
-		    \showlegend  <br>
-		    \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
-		    \end{texshade}  <br>
-		    \end{document} <br>
+<!-- MSA Figure: Chemical -->
+<div style="background-color:#fefefe;border-color:#009d86;border-width:10px" class="card" id="texChemical">
+  <h3 class="card-header">MSA Figure - Chemical Highlighting</h3>
 
-		    <a class="btn btn-primary btn-block" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
-		</span>
-	    </p>
-
-	    <object data={{texIdentityPDF}} type="application/pdf" width="500px" height="600px"> 
-		<p>
-		    There was a problem displaying the pdf. You can 
-		    download it directly <a href={{texIdentityPDF}}>here</a>
-		</p>
-            </object>
-        </div>
-
+  <div class="card-block">
+    <div class="row">
+      <div class="col-8">
+        <object data={{texChemicalPDF}} type="application/pdf" width="100%" height="500px">
+          <p>
+            There was a problem displaying the pdf. You can
+            download it directly <a href={{texChemicalPDF}}>here</a>
+          </p>
+        </object>
       </div>
-    </div>
-  </div>
-<!--    "OPTIMIZATION COMMENT"
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingFive">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-          MSA Figure - Chemical Similarity Highlighting
-        </a>
-      </h4>
-    </div>
-    <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-      <div class="panel-body">
 
-        <div class="well well-sm">
-	    <p class="pull-right">
-	        <b>LaTeX Code:</b><br>
-		<span class="bioSequence" style="font-size:10px">
-		    \documentclass[preview]{standalone} <br>
-		    \usepackage{texshade} <br>
-		    \usepackage{inconsolata} <br>
-		    \begin{document} <br>
-		    \begin{texshade}{alignmentFile.aln} <br>
-		    \shadingmode[chemical]{functional}  <br>
-		    \showcaption[bottom] <br>
-		    &nbsp;&nbsp;
-		    {\textbf{Protein MSA with Chemical Similarity Highlighting}}  <br>
-		    \hideconsensus  <br>
-		    \namesfootnotesize  <br>
-		    \residuesfootnotesize  <br>
-		    \numberingscriptsize <br>
-		    \showlegend  <br>
-		    \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
-		    \end{texshade}  <br>
-		    \end{document} <br>
+      <div class="col-4">
+        <p class="card-text">
+          <b>LaTeX Code:</b><br>
+          \documentclass[preview]{standalone} <br>
+          \usepackage{texshade} <br>
+          \usepackage{inconsolata} <br>
+          \begin{document} <br>
+          \begin{texshade}{alignmentFile.aln} <br>
+          \shadingmode[chemical]{functional}  <br>
+          \showcaption[bottom]{\textbf{Protein MSA with Chemical Highlighting}}  <br>
+          \hideconsensus  <br>
+          \namesfootnotesize  <br>
+          \residuesfootnotesize  <br>
+          \numberingscriptsize <br>
+          \showlegend  <br>
+          \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
+          \end{texshade}  <br>
+          \end{document} <br>
 
-		    <a class="btn btn-primary btn-block" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
-		</span>
-	    </p>
-
-	    <object data={{texChemicalPDF}} type="application/pdf" width="500px" height="600px"> 
-		<p>
-		    There was a problem displaying the pdf. You can 
-		    download it directly <a href={{texChemicalPDF}}>here</a>
-		</p>
-            </object>
-        </div>
-
+          <a class="btn btn-primary btn-block" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
+        </p>
       </div>
-    </div>
+    </div> <!-- row div -->
   </div>
-  -->
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingSix">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-          MSA Figure - Structual Similarity Highlighting
-        </a>
-      </h4>
-    </div>
-    <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
-      <div class="panel-body">
+</div>
 
-        <div class="well well-sm">
-	    <p class="pull-right">
-	        <b>LaTeX Code:</b><br>
-		<span class="bioSequence" style="font-size:10px">
-		    \documentclass[preview]{standalone} <br>
-		    \usepackage{texshade} <br>
-		    \usepackage{inconsolata} <br>
-		    \begin{document} <br>
-		    \begin{texshade}{alignmentFile.aln} <br>
-		    \shadingmode[structure]{functional}  <br>
-		    \showcaption[bottom] <br>
-		    &nbsp;&nbsp;
-		    {\textbf{Protein MSA with Structural Similarity Highlighting}}  <br>
-		    \hideconsensus  <br>
-		    \namesfootnotesize  <br>
-		    \residuesfootnotesize  <br>
-		    \numberingscriptsize <br>
-		    \showlegend  <br>
-		    \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
-		    \end{texshade}  <br>
-		    \end{document} <br>
 
-		    <a class="btn btn-primary btn-block" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
-		</span>
-	    </p>
+<!-- MSA Figure: Structural -->
+<div style="background-color:#fefefe;border-color:#008774;border-width:10px" class="card" id="texStructural">
+  <h3 class="card-header">MSA Figure - Structural Highlighting</h3>
 
-	    <object data={{texStructuralPDF}} type="application/pdf" width="500px" height="600px"> 
-		<param name="view" value="Fit" />
-                <p>
-		   There was a problem displaying the pdf. You can 
-		   download it directly <a href={{texStructuralPDF}}>here</a>
-		</p>
-            </object>
-        </div>
-
+  <div class="card-block">
+    <div class="row">
+      <div class="col-8">
+        <object data={{texStructuralPDF}} type="application/pdf" width="100%" height="500px">
+          <p>
+            There was a problem displaying the pdf. You can
+            download it directly <a href={{texStructuralPDF}}>here</a>
+          </p>
+        </object>
       </div>
-    </div>
-  </div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingSeven">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseSeven" aria-expanded="false" aria-controls="collapseEight">
-          Dendrogram - ASCII
-        </a>
-      </h4>
-    </div>
-    <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
-      <div class="panel-body">
+      <div class="col-4">
+        <p class="card-text">
+          <b>LaTeX Code:</b><br>
+          \documentclass[preview]{standalone} <br>
+          \usepackage{texshade} <br>
+          \usepackage{inconsolata} <br>
+          \begin{document} <br>
+          \begin{texshade}{alignmentFile.aln} <br>
+          \shadingmode[structure]{functional}  <br>
+          \showcaption[bottom]{\textbf{Protein MSA with Structural Highlighting}}  <br>
+          \hideconsensus  <br>
+          \namesfootnotesize  <br>
+          \residuesfootnotesize  <br>
+          \numberingscriptsize <br>
+          \showlegend  <br>
+          \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
+          \end{texshade}  <br>
+          \end{document} <br>
 
-        <div class="well well-sm">
-             
-	<pre class="bioSequence">{% for line in asciiTree %}{{line}}{% endfor %}
-	</pre>
-	
-	</div>
-
+          <a class="btn btn-primary btn-block" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
+        </p>
       </div>
-    </div>
+    </div> <!-- row div -->
   </div>
+</div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingEight">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-          Dendrogram - Graphic
-        </a>
-      </h4>
-    </div>
-    <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
-      <div class="panel-body">
 
-        <div class="well well-sm">
-		<img src={{graphicTree}} class="img-responsive" alt="Dendrogram Image">	
-	</div>
+<!-- Dendrogram: ASCII -->
+<div style="background-color:#fefefe;border-color:#76cf53;border-width:10px" class="card" id="dendroASCII">
+  <h3 class="card-header">Dendrogram - ASCII</h3>
 
-      </div>
-    </div>
+  <div class="card-block">
+    <pre><samp>{% for line in asciiTree %}{{line}}{% endfor %}</samp></pre>
   </div>
-  
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingNine">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" href="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
-	 Substitution Matrix
-        </a>
-      </h4>
-    </div>
-    <div id="collapseNine" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingNine">
-      <div class="panel-body">
+</div>
 
-        <div class="well well-sm">
-	    {{singleLtrFrqDiv|safe}}
-	    <hr>
-	    {{pairFrqHtMpDiv|safe}}
-	    <hr>
-	    {{scoreMatDiv|safe}}
 
-            <!-- Residues By Type Button trigger modal -->
-            <button type="button" style="width:700px;" class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#subModal">
-              Sort Residues By Type 
+<!-- Dendrogram: Graphic -->
+<div style="background-color:#fefefe;border-color:#d6df41;border-width:10px;" class="card" id="dendroGraphic">
+  <h3 class="card-header">Dendrogram - Graphic</h3>
+
+  <div class="card-block">
+    <img src={{graphicTree}} style="height:800px;" class="img-fluid" alt="Dendrogram Image">	
+  </div>
+</div>
+
+
+<!-- Substitution Matrix -->
+<div style="background-color:#fefefe;border-color:#ede040;border-width:10px" class="card" id="subMat">
+  <h3 class="card-header">Dendrogram - Graphic</h3>
+
+  <div class="card-block">
+    {{singleLtrFrqDiv|safe}}
+    <hr>
+    {{pairFrqHtMpDiv|safe}}
+    <hr>
+    {{scoreMatDiv|safe}}
+
+
+    <!-- Residues By Type Button Modal -->
+    <button type="button" style="width:700px;" class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#subModal">
+      Sort Residues By Type
+    </button>
+
+    <!-- Residues by Type Modal -->
+    <div class="modal fade" id="subModal" tabindex="-1" role="dialog" aria-labelledby="subModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="subModalLabel">Substitution Matrix: Ordered by Residue Type</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
             </button>
+          </div>
 
-            <!-- Modal -->
-            <div class="modal fade" id="subModal" tabindex="-1" role="dialog" aria-labelledby="subModalLabel">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="subModalLabel">Substitution Matrix: Ordered by Residue Type</h4>
-                  </div>
-                  <div class="modal-body">
-                    {{resTypeDiv|safe}}
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
-            </div> 
-             
-            <hr style="width:700px;margin:0px;padding:0px">
+          <div class="modal-body">
+            {{resTypeDiv|safe}}
+          </div>
 
-            <!-- Text Matrix Button trigger modal -->
-            <button type="button" style="width:700px;" class="btn btn-primary btn-xs btn-block" data-toggle="modal" data-target="#myModal">
-              Get Matrix as Text
-            </button>
-
-            <!-- Modal -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Substitution Matrix</h4>
-                  </div>
-                  <div class="modal-body">
-                    {{scoreTable|safe}}   
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
-            </div> 
-
-	</div>
-
+          <div class="modal-footer">
+            <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Close</button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </div> <!-- modal div -->
 
+    <!-- Residues as Text Button Modal -->
+    <button type="button" style="width:700px;margin-top:2px;" class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#txtModal">
+      Get Matrix as Text
+    </button>
+
+
+    <!-- Residues as TextModal -->
+    <div class="modal fade" id="txtModal" tabindex="-1" role="dialog" aria-labelledby="subModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="subModalLabel">Substitution Matrix: Text Formatted</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            {{scoreTable|safe}}
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div> <!-- modal div -->
+  </div>
 </div>
 
 {% endblock %}

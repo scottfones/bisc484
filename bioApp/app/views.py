@@ -23,7 +23,6 @@ from plotly.offline import download_plotlyjs, plot
 from Bio.Alphabet import IUPAC
 from Bio.Align import AlignInfo
 from Bio.Align.Applications import ClustalwCommandline
-#from Bio.Align.Applications import ClustalOmegaCommandline
 from Bio import Entrez, AlignIO, SeqIO, Phylo, SubsMat, Alphabet
 
 
@@ -147,70 +146,76 @@ def proteinResults():
             for record in SeqIO.parse(fileInput, 'fasta'):
                 sequenceList.append(record)
 
-        f = open(seqFile, 'w')
+        if not os.path.isfile(seqFile):
+            f = open(seqFile, 'w')
 
-        for record in sequenceList:
-            f.write('> ' + record.name + '\n')
-            f.write(str(record.seq) + '\n')
+            for record in sequenceList:
+                f.write('> ' + record.name + '\n')
+                f.write(str(record.seq) + '\n')
 
-        f.close()
+            f.close()
 
     else:
         accessionList = accessionList.split('+')
 
-        # Accession Look Up
-        Entrez.email = "sfones@udel.edu"
-        sequenceList = []
+        if not os.path.isfile(seqFile):
+            # Accession Look Up
+            Entrez.email = "sfones@udel.edu"
+            sequenceList = []
 
-        for accessionValue in accessionList:
-            try:
-                record = SeqIO.read(Entrez.efetch(db="protein", id=accessionValue, rettype="fasta", retmode="text"), "fasta")
-            except:
-                flash(u'Accession Value Error', 'error')
-                return redirect('/proteinInput')
+            for accessionValue in accessionList:
+                try:
+                    record = SeqIO.read(Entrez.efetch(db="protein", id=accessionValue, rettype="fasta", retmode="text"), "fasta")
+                except:
+                    flash(u'Accession Value Error', 'error')
+                    return redirect('/proteinInput')
 
-            tmpDesc = record.description.split( )
-            record.name = "_".join(tmpDesc[1:-2])
-            record.description = "_".join(tmpDesc)
+                tmpDesc = record.description.split( )
+                record.name = "_".join(tmpDesc[1:-2])
+                record.description = "_".join(tmpDesc)
 
-            sequenceList.append(record)
-
-
-        # Construct Sequence List 
-        alignmentList = []
-
-        for record in sequenceList:
-
-            alignmentList.append('>' + str(record.name))
-            alignmentList.append(str(record.seq))
-
-        alignmentInput = "\n".join(alignmentList)
+                sequenceList.append(record)
 
 
-        # Create Sequence File
-        seqFile = ABS_TMP + userID + '.faa'
+            # Construct Sequence List 
+            alignmentList = []
 
-        f = open(seqFile, 'w')
+            for record in sequenceList:
 
-        for record in sequenceList:
+                alignmentList.append('>' + str(record.name))
+                alignmentList.append(str(record.seq))
 
-            f.write('> ' + record.name + '\n')
-            f.write(str(record.seq) + '\n')
+            alignmentInput = "\n".join(alignmentList)
 
-        f.close() 
+
+            # Create Sequence File
+            f = open(seqFile, 'w')
+
+            for record in sequenceList:
+                f.write('> ' + record.name + '\n')
+                f.write(str(record.seq) + '\n')
+
+            f.close() 
+        else:
+            with open(seqFile, 'r') as fileInput:
+                for record in SeqIO.parse(fileInput, 'fasta'):
+                    sequenceList.append(record)
+
+       
 
 
     # Create Alignment and Tree File
     alignFile = ABS_TMP + userID + '.afa'
     treeFile = ABS_TMP + userID + '.dnd'
 
-    clustalw_cline = ClustalwCommandline("clustalw2", infile=seqFile, outfile=alignFile, newtree=treeFile, outorder="aligned", align=True)
+    if not os.path.isfile(alignFile):
+        clustalw_cline = ClustalwCommandline("clustalw2", infile=seqFile, outfile=alignFile, newtree=treeFile, outorder="aligned", align=True)
     
-    try:
-        clustalw_cline()
-    except:
-        flash(u'Alignment Error: Check formatting (Spaces in names? All names unique?)','error')
-        return(redirect('/proteinInput'))
+        try:
+            clustalw_cline()
+        except:
+            flash(u'Alignment Error: Check formatting (Spaces in names? All names unique?)','error')
+            return(redirect('/proteinInput'))
         
     
     # Generate and Format Alignments
@@ -227,81 +232,85 @@ def proteinResults():
     # Generate Latex Identity Alignment
     texIdentityFile = ABS_TMP + userID + '_identity.tex'
 
-    with open(texIdentityFile, 'w') as texfile:
-       
-        texfile.write('\\documentclass[preview]{standalone}\n')
-        texfile.write('\\usepackage{texshade}\n')
-        texfile.write('\\usepackage{inconsolata}\n')
-        texfile.write('\\begin{document}\n')
-        texfile.write('\\begin{texshade}{%s}\n' % alignFile)
-        texfile.write('\\shadingmode[allmatchspecial]{identical}\n')
-        texfile.write('\\showcaption[bottom]{\\textbf{Protein MSA with Identity Highlighting}}\n')
-        texfile.write('\\label{fig:blast_tc66374}\n')
-        texfile.write('\\hideconsensus\n')
-        texfile.write('\\namesfootnotesize\n')
-        texfile.write('\\residuesfootnotesize\n')
-        texfile.write('\\numberingscriptsize\n')
-        texfile.write('\\showlegend\n')
-        texfile.write('\\end{texshade}\n')
-        texfile.write('\\end{document}\n')
+    if not os.path.isfile(texIdentityFile):
+        with open(texIdentityFile, 'w') as texfile:
+        
+            texfile.write('\\documentclass[preview]{standalone}\n')
+            texfile.write('\\usepackage{texshade}\n')
+            texfile.write('\\usepackage{inconsolata}\n')
+            texfile.write('\\begin{document}\n')
+            texfile.write('\\begin{texshade}{%s}\n' % alignFile)
+            texfile.write('\\shadingmode[allmatchspecial]{identical}\n')
+            texfile.write('\\showcaption[bottom]{\\textbf{Protein MSA with Identity Highlighting}}\n')
+            texfile.write('\\label{fig:blast_tc66374}\n')
+            texfile.write('\\hideconsensus\n')
+            texfile.write('\\namesfootnotesize\n')
+            texfile.write('\\residuesfootnotesize\n')
+            texfile.write('\\numberingscriptsize\n')
+            texfile.write('\\showlegend\n')
+            texfile.write('\\end{texshade}\n')
+            texfile.write('\\end{document}\n')
 
-    texfile.close()
+        texfile.close()
 
-    os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texIdentityFile))
+        os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texIdentityFile))
     
     texIdentityPDF = 'static/tmp/' + userID + '_identity.pdf'
 
     # Generate Latex Chemical Similarity Alignment
-    '''   OPTIMIZATION COMMENT
-    texChemicalFile= ABS_TMP + userID + '_chemical.tex'
+    texChemicalFile = ABS_TMP + userID + '_chemical.tex'
 
-    with open(texChemicalFile, 'w') as texfile:
+    if not os.path.isfile(texChemicalFile):
        
-        texfile.write('\\documentclass[preview]{standalone}\n')
-        texfile.write('\\usepackage{texshade}\n')
-        texfile.write('\\usepackage{inconsolata}\n')
-        texfile.write('\\begin{document}\n')
-        texfile.write('\\begin{texshade}{%s}\n' % alignFile)
-        texfile.write('\\shadingmode[chemical]{functional}\n')
-        texfile.write('\\showcaption[bottom]{\\textbf{Protein MSA with Chemical Similarity Highlighting}}\n')
-        texfile.write('\\hideconsensus\n')
-        texfile.write('\\namesfootnotesize\n')
-        texfile.write('\\residuesfootnotesize\n')
-        texfile.write('\\numberingscriptsize\n')
-        texfile.write('\\showlegend\n')
-        texfile.write('\\end{texshade}\n')
-        texfile.write('\\end{document}\n')
+        with open(texChemicalFile, 'w') as texfile:
+       
+            texfile.write('\\documentclass[preview]{standalone}\n')
+            texfile.write('\\usepackage{texshade}\n')
+            texfile.write('\\usepackage{inconsolata}\n')
+            texfile.write('\\begin{document}\n')
+            texfile.write('\\begin{texshade}{%s}\n' % alignFile)
+            texfile.write('\\shadingmode[chemical]{functional}\n')
+            texfile.write('\\showcaption[bottom]{\\textbf{Protein MSA with Chemical Similarity Highlighting}}\n')
+            texfile.write('\\hideconsensus\n')
+            texfile.write('\\namesfootnotesize\n')
+            texfile.write('\\residuesfootnotesize\n')
+            texfile.write('\\numberingscriptsize\n')
+            texfile.write('\\showlegend\n')
+            texfile.write('\\end{texshade}\n')
+            texfile.write('\\end{document}\n')
 
-    texfile.close()
+        texfile.close()
 
-    os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texChemicalFile))
+        os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texChemicalFile))
     
     texChemicalPDF = 'static/tmp/' + userID + '_chemical.pdf'    
-    '''
+    
 
     # Generate Latex Structural Similarity Alignment
     texStructuralFile = ABS_TMP + userID + '_structural.tex'
 
-    with open(texStructuralFile, 'w') as texfile:
+    if not os.path.isfile(texStructuralFile):
+
+        with open(texStructuralFile, 'w') as texfile:
        
-        texfile.write('\\documentclass[preview]{standalone}\n')
-        texfile.write('\\usepackage{texshade}\n')
-        texfile.write('\\usepackage{inconsolata}\n')
-        texfile.write('\\begin{document}\n')
-        texfile.write('\\begin{texshade}{%s}\n' % alignFile)
-        texfile.write('\\shadingmode[structure]{functional}\n')
-        texfile.write('\\showcaption[bottom]{\\textbf{Protein MSA with Structural Similarity Highlighting}}\n')
-        texfile.write('\\hideconsensus\n')
-        texfile.write('\\namesfootnotesize\n')
-        texfile.write('\\residuesfootnotesize\n')
-        texfile.write('\\numberingscriptsize\n')
-        texfile.write('\\showlegend\n')
-        texfile.write('\\end{texshade}\n')
-        texfile.write('\\end{document}\n')
+            texfile.write('\\documentclass[preview]{standalone}\n')
+            texfile.write('\\usepackage{texshade}\n')
+            texfile.write('\\usepackage{inconsolata}\n')
+            texfile.write('\\begin{document}\n')
+            texfile.write('\\begin{texshade}{%s}\n' % alignFile)
+            texfile.write('\\shadingmode[structure]{functional}\n')
+            texfile.write('\\showcaption[bottom]{\\textbf{Protein MSA with Structural Similarity Highlighting}}\n')
+            texfile.write('\\hideconsensus\n')
+            texfile.write('\\namesfootnotesize\n')
+            texfile.write('\\residuesfootnotesize\n')
+            texfile.write('\\numberingscriptsize\n')
+            texfile.write('\\showlegend\n')
+            texfile.write('\\end{texshade}\n')
+            texfile.write('\\end{document}\n')
 
-    texfile.close()
+        texfile.close()
 
-    os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texStructuralFile))
+        os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texStructuralFile))
     
     texStructuralPDF = 'static/tmp/' + userID + '_structural.pdf'  
 
@@ -313,6 +322,7 @@ def proteinResults():
     leghemeClade = tree.find_clades({'name':'.*leghemoglobin.*'}) 
     tree.root_with_outgroup(leghemeClade)
 
+    # find and categorize term nodes
     terminalClades = tree.get_terminals()
     alphaClades = []
     betaClades = []
@@ -367,10 +377,12 @@ def proteinResults():
     asciiTreeFile = ABS_TMP + userID + '_asciiTree.txt'
     asciiTree = []
 
-    with open(asciiTreeFile, 'w') as asciiTF:
-        Phylo.draw_ascii(tree, file = asciiTF)
+    if not os.path.isfile(asciiTreeFile): 
 
-    asciiTF.close()
+        with open(asciiTreeFile, 'w') as asciiTF:
+            Phylo.draw_ascii(tree, file = asciiTF)
+
+        asciiTF.close()
 
     inFile = open(asciiTreeFile, 'r')
 
@@ -383,18 +395,20 @@ def proteinResults():
     # Create Graphic Dendrogram
     graphicTreeFile = ABS_TMP + userID + '_graphicTree.png'
 
-    tree = tree.as_phyloxml()
-    tree.root.color='gray'
+    if not os.path.isfile(graphicTreeFile):
 
-    matplotlib.rc('font', size=24)
-    matplotlib.rc('lines', linewidth=4.0)
-    pylab.rcParams['figure.figsize'] = 25, 20
-    pylab.rcParams['figure.autolayout'] = True
-    pylab.rcParams['savefig.bbox'] = 'tight'
-    Phylo.draw(tree, do_show=False, axes=None)
-    pylab.axis('off')
-    
-    pylab.savefig(graphicTreeFile, dpi=200)
+        tree = tree.as_phyloxml()
+        tree.root.color='gray'
+
+        matplotlib.rc('font', size=24)
+        matplotlib.rc('lines', linewidth=4.0)
+        pylab.rcParams['figure.figsize'] = 25, 20
+        pylab.rcParams['figure.autolayout'] = True
+        pylab.rcParams['savefig.bbox'] = 'tight'
+        Phylo.draw(tree, do_show=False, axes=None)
+        pylab.axis('off')
+        
+        pylab.savefig(graphicTreeFile, dpi=200)
 
     graphicTreeFile = 'static/tmp/' + userID + '_graphicTree.png'
 
@@ -575,7 +589,8 @@ def proteinResults():
 
 
         scoreMat_z.append(rowList)
-    
+   
+ 
     # Generate Scoring Matrix Heatmap
     annotations = []
 
@@ -778,8 +793,8 @@ def proteinResults():
     fig['layout'].update(
         #title = 'Substitution Matrix Heatmap<br>Residues By Type',
         annotations=annotations,
-        width = 500,
-        height = 500,
+        width = 700,
+        height = 700,
         autosize = False,
 
         xaxis = dict(
@@ -816,7 +831,7 @@ def proteinResults():
                             alignmentClustal = alignmentClustal,
                             alignmentFASTA = alignmentFASTA,
                             texIdentityPDF = texIdentityPDF,
-                            #texChemicalPDF = texChemicalPDF,
+                            texChemicalPDF = texChemicalPDF,
                             texStructuralPDF = texStructuralPDF,
                             asciiTree = asciiTree,
                             graphicTree = graphicTreeFile,

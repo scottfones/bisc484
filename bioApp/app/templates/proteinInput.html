@@ -1,101 +1,123 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h2>Protein Input</h2>
+<div class="row">
 
-    <h3>Accession Input Form</h3>
+  <div class="col-9">
+   <div style="background-color:#fdfdfd;" class="card card-outline-primary">
+    <h1 class="card-header">Protein Input</h1>
 
-    <div class="pull-right">    
-    <form action="" method="post" name="AccessionVals">
-    {{ form1.hidden_tag() }}
+    <div class="card-block">
 
-    {{ form1.accessionInput( class="form-control", style="height:396px;" ) }}
-	
-    <input class="btn btn-primary btn-block" type="submit" value="Submit">
+    <p class="card-text">
+      Enter NCBI Accession Numbers in the form to the right. The default values correspond to the proteins in the table below.
+      Alternatively, upload a fasta-formatted file.
+      <br>
+      <br>
+      On subsequent visits, you can skip directly to the results page. 
+      <br>
+      Resubmitting the form will override the stored values.
+    </p>
 
+    <table style="width:100%" class="table table-sm table-hover table-striped">
+      <thead class="thead-default">
+        <tr>
+          <th>Accession Value</th>
+          <th>Protein Name</th>
+	</tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td><a href="https://www.ncbi.nlm.nih.gov/protein/4504351">NP_000510.1</a></td>
+	  <td>hemoglobin subunit delta [Homo sapiens]</td>
+        </tr>
+        <tr>
+	  <td><a href="https://www.ncbi.nlm.nih.gov/protein/NP_000175">NP_000175.1</a></td>
+	  <td>hemoglobin subunit gamma-2 [Homo sapiens]</td>
+	</tr>
+        <tr>
+	  <td><a href="https://www.ncbi.nlm.nih.gov/protein/4504349">NP_000509.1</a></td>
+	  <td>hemoglobin subunit beta [Homo sapiens]</td>
+	</tr>
+        <tr>
+	  <td><a href="https://www.ncbi.nlm.nih.gov/protein/28302131">NP_000550.2</a></td>
+	  <td>hemoglobin subunit gamma-1 [Homo sapiens]</td>
+	</tr>
+        <tr>
+	  <td><a href="https://www.ncbi.nlm.nih.gov/protein/4885393">NP_005321.1</a></td>
+	  <td>hemoglobin subunit epsilon [Homo sapiens]</td>
+	</tr>
+        <tr>
+	  <td><a href="https://www.ncbi.nlm.nih.gov/protein/4885397">NP_005323.1</a></td>
+	  <td>hemoglobin subunit zeta [Homo sapiens]</td>
+	</tr>
+        <tr>
+	  <td><a href="https://www.ncbi.nlm.nih.gov/protein/NP_000508">NP_000508.1</a></td>
+	  <td>hemoglobin subunit alpha [Homo sapiens]</td>
+	</tr>
+        <tr>
+          <td><a href="https://www.ncbi.nlm.nih.gov/protein/NP_005322.1">NP_005322.1</a></td>
+	  <td>hemoglobin subunit theta-1 [Homo sapiens]</td>
+        </tr>
+        <tr>
+          <td><a href="https://www.ncbi.nlm.nih.gov/protein/51510893">NP_001003938.1</a></td>
+          <td>hemoglobin subunit mu [Homo sapiens]</td>
+        </tr>
+        <tr>
+          <td><a href="https://www.ncbi.nlm.nih.gov/protein/4885477">NP_005359.1</a></td>
+          <td>myoglobin [Homo sapiens]</td>
+        </tr>
+        <tr>
+          <td><a href="https://www.ncbi.nlm.nih.gov/protein/19549331">NP_599030.1</a></td>
+	  <td>cytoglobin [Homo sapiens]</td>
+	</tr>
+        <tr>
+	  <td><a href="https://www.ncbi.nlm.nih.gov/protein/10864065">NP_067080.1</a></td>
+	  <td>neuroglobin [Homo sapiens]</td>
+	</tr>
+        <tr>
+	  <td><a href="https://www.ncbi.nlm.nih.gov/protein/CAA38024">CAA38024.1</a></td>
+	  <td>leghemoglobin [Medicago sativa]</td>
+        </tr>
+      </tbody>
+    </table>
+    </div> <!-- card block div -->
+   </div> <!-- card div -->
+  </div> <!-- col div -->
+
+  <div class="col-3">
+
+   <div style="height:73%;background-color:#dfdfdf" class="card card-outline-primary">
+    <h5 class="card-header">Accession Input</h5>
+
+    <div class="card-block">
+    <form style="height:100%;" action="" method="post" name="AccessionVals">
+      {{ form1.hidden_tag() }}
+
+      {{ form1.accessionInput( class="form-control", style="height:345px;" ) }}
+
+      <input class="btn btn-primary btn-block btn-sm" type="submit" value="Submit">
     </form>
-    <h5>FASTA File Upload:</h5>
+    </div> <!-- card block div -->
+   </div> <!-- card div -->
+
+   <div class="w-100"></div>
+
+   <div style="height:25%;background-color:#dfdfdf;margin-top:12px;" class="card card-outline-primary">
+    <h5 class="card-header">FASTA File Upload</h5>
+
+    <div class="card-block">
     <form method=post enctype=multipart/form-data>
       <span>
-      <input class='pull-left btn btn-xs' type=file name=file>
-      <input class='btn btn-primary btn-xs' type=submit value=Upload>
+        <input style="padding-left:0px;" class='btn btn-sm' type=file name=file>
+        <input class='btn btn-primary btn-block btn-sm' type=submit value=Upload>
       </span>
     </form>
+    </div> <!-- card block div -->
+   </div> <!-- card div -->
+  </div> <!-- col div -->
 
-    </div>
-
-    <div class="well well-sm">
-        <p>
-        Enter NCBI Accession values in the form to the right (one per line). The pre-populated values correspond to the proteins in the table below.
-        <br>
-        Alternatively, upload your fasta-formatted file using the form in the bottom, right corner.
-        <br>
-	On subsequent visits, you can skip directly to the results page. To override the saved values, resubmit the form.
-        </p>
-
-	<table style="width:60%" class="table table-condensed table-striped table-responsive">
-	    <thead>
-	    <tr>
-	        <th>Accession Value</th>
-		<th>Protein Name</th>
-	    </tr>
-	    </thead>
-
-	    <tbody>
-            <tr>
-		<td><a href="https://www.ncbi.nlm.nih.gov/protein/4504351">NP_000510.1</a></td>
-	        <td>hemoglobin subunit delta [Homo sapiens]</td>
-	    </tr>
-            <tr>
-		<td><a href="https://www.ncbi.nlm.nih.gov/protein/NP_000175">NP_000175.1</a></td>
-	        <td>hemoglobin subunit gamma-2 [Homo sapiens]</td>
-	    </tr>
-            <tr>
-		<td><a href="https://www.ncbi.nlm.nih.gov/protein/4504349">NP_000509.1</a></td>
-	        <td>hemoglobin subunit beta [Homo sapiens]</td>
-	    </tr>
-            <tr>
-		<td><a href="https://www.ncbi.nlm.nih.gov/protein/28302131">NP_000550.2</a></td>
-	        <td>hemoglobin subunit gamma-1 [Homo sapiens]</td>
-	    </tr>
-            <tr>
-		<td><a href="https://www.ncbi.nlm.nih.gov/protein/4885393">NP_005321.1</a></td>
-	        <td>hemoglobin subunit epsilon [Homo sapiens]</td>
-	    </tr>
-            <tr>
-		<td><a href="https://www.ncbi.nlm.nih.gov/protein/4885397">NP_005323.1</a></td>
-	        <td>hemoglobin subunit zeta [Homo sapiens]</td>
-	    </tr>
-            <tr>
-		<td><a href="https://www.ncbi.nlm.nih.gov/protein/NP_000508">NP_000508.1</a></td>
-	        <td>hemoglobin subunit alpha [Homo sapiens]</td>
-	    </tr>
-            <tr>
-                <td><a href="https://www.ncbi.nlm.nih.gov/protein/NP_005322.1">NP_005322.1</a></td>
-	        <td>hemoglobin subunit theta-1 [Homo sapiens]</td>
-	    </tr>
-            <tr>
-	        <td><a href="https://www.ncbi.nlm.nih.gov/protein/51510893">NP_001003938.1</a></td>
-	        <td>hemoglobin subunit mu [Homo sapiens]</td>
-	    </tr>
-            <tr>
-	        <td><a href="https://www.ncbi.nlm.nih.gov/protein/4885477">NP_005359.1</a></td>
-	        <td>myoglobin [Homo sapiens]</td>
-	    </tr>
-            <tr>
-		<td><a href="https://www.ncbi.nlm.nih.gov/protein/19549331">NP_599030.1</a></td>
-	        <td>cytoglobin [Homo sapiens]</td>
-	    </tr>
-            <tr>
-		<td><a href="https://www.ncbi.nlm.nih.gov/protein/10864065">NP_067080.1</a></td>
-	        <td>neuroglobin [Homo sapiens]</td>
-	    </tr>
-            <tr>
-		<td><a href="https://www.ncbi.nlm.nih.gov/protein/CAA38024">CAA38024.1</a></td>
-	        <td>leghemoglobin [Medicago sativa]</td>
-	    </tr>
-	    </tbody>
-	</table>
-    </div>
+</div> <!-- end row div -->
 
 {% endblock %}

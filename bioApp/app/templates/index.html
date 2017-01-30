@@ -1,10 +1,35 @@
 {% extends "base.html" %}
-{% block content %}
-    <h2>Welcome, BISC 484 Student!</h2>
 
-    <p>
-    This web app was designed to supplement BISC 484 by reproducing some of the data and figures generated during the semester.
-    <br>
-    Use the menu bars to select protein or genetic data. The input pages allow input via NCBI Accession values or a FASTA-formatted file. Your input will be stored for subsequent visits, and can be accessed directly using the 'Results' menu options.
-    </p>
+{% block content %}
+<div class="jumbotron">
+  <h1>Welcome BISC 484 Student!</h1>
+</div>
+
+<div class="card-deck">
+  <div class="card">
+    <h5 class="card-header">About</h5>
+    
+    <div class="card-block">
+      <p class="card-text">
+        This web app was designed to supplement BISC 484 by reproducing some of the data and figures generated during the semester. I hope you find it useful, especially when putting your papers together.
+        <br><br>
+        If you have any issues, or thoughts about how to make it better, send me an <a href="mailto:sfones@udel.edu?Subject=BISC484%20Web%20App" target="_blank">email</a>. 
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h5 class="card-header">How To</h5>
+
+    <div class="card-block">
+      <p class="card-text">
+        Using the navigation bar, select protein or gene. If you haven't uploaded a dataset, select the input option from the dropdown. The input pages allow you to enter NCBI Accession Numbers, or upload a FASTA formatted file. Your input will be stored and can be accessed directly by selecting results from the dropdown.
+        <br><br>
+        Loading the results page for a new dataset may take a significant amount of time. However, subsequent views should be at least an order of magnitude faster.
+      </p>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}
