@@ -43,9 +43,8 @@
   <h1>Protein Results</h1>
 </div>
 
-
 <!-- Sequence List -->
-<div style="background-color:#fefefe;border-color:#492164;border-width:5px" class="card" id="seqList">
+<div style="margin-top:15px;background-color:#fefefe;border-color:#492164;border-width:2px" class="card" id="seqList">
   <h3 class="card-header">Sequence List</h3>
 
   <div class="card-block">
@@ -62,35 +61,32 @@
   </div>
 </div>  
 
+<div class="card-deck">
+    <!-- MSA: Clustal -->
+    <div style="margin-top:15px;background-color:#fefefe;border-color:#42427f;border-width:2px" class="card" id="msaClustal">
+      <h3 class="card-header">MSA - Clustal Output</h3>
 
-<!-- MSA: Clustal -->
-<div style="background-color:#fefefe;border-color:#42427f;border-width:5px" class="card" id="msaClustal">
-  <h3 class="card-header">MSA - Clustal Output</h3>
-
-  <div class="card-block">
-    <pre><samp>{% for line in alignmentClustal %}
+      <div class="card-block">
+        <pre><samp>{% for line in alignmentClustal %}
 {{line}}{% endfor %}</samp>
-    </pre>
+        </pre>
+      </div>  
+    </div>
 
-  </div>  
-</div> 
+    <!-- MSA: FASTA-->
+    <div style="margin-top:15px;background-color:#fefefe;border-color:#286289;border-width:2px" class="card" id="msaFASTA">
+      <h3 class="card-header">MSA - FASTA Output</h3>
 
-
-<!-- MSA: FASTA-->
-<div style="background-color:#fefefe;border-color:#286289;border-width:5px" class="card" id="msaFASTA">
-  <h3 class="card-header">MSA - FASTA Output</h3>
-
-  <div class="card-block">
-    <pre><samp>{% for line in alignmentFASTA %}
+      <div class="card-block">
+        <pre><samp>{% for line in alignmentFASTA %}
 {{line}}{% endfor %}</samp>
-    </pre>
-
-  </div>
+        </pre>
+      </div>
+    </div>
 </div>
 
-
 <!-- MSA Figure: Identity -->
-<div style="background-color:#fefefe;border-color:#007ebc;border-width:5px" class="card" id="texIdentity">
+<div style="margin-top:15px;background-color:#fefefe;border-color:#007ebc;border-width:2px" class="card" id="texIdentity">
   <h3 class="card-header">MSA Figure - Identity Highlighting</h3>
 
   <div class="card-block">
@@ -132,7 +128,7 @@
 
 
 <!-- MSA Figure: Chemical -->
-<div style="background-color:#fefefe;border-color:#009d86;border-width:5px" class="card" id="texChemical">
+<div style="margin-top:15px;background-color:#fefefe;border-color:#009d86;border-width:2px" class="card" id="texChemical">
   <h3 class="card-header">MSA Figure - Chemical Highlighting</h3>
 
   <div class="card-block">
@@ -174,7 +170,7 @@
 
 
 <!-- MSA Figure: Structural -->
-<div style="background-color:#fefefe;border-color:#008774;border-width:5px" class="card" id="texStructural">
+<div style="margin-top:15px;background-color:#fefefe;border-color:#008774;border-width:2px" class="card" id="texStructural">
   <h3 class="card-header">MSA Figure - Structural Highlighting</h3>
 
   <div class="card-block">
@@ -216,7 +212,7 @@
 
 
 <!-- Dendrogram: ASCII -->
-<div style="background-color:#fefefe;border-color:#76cf53;border-width:5px" class="card" id="dendroASCII">
+<div style="margin-top:15px;background-color:#fefefe;border-color:#76cf53;border-width:2px" class="card" id="dendroASCII">
   <h3 class="card-header">Dendrogram - ASCII</h3>
 
   <div class="card-block">
@@ -226,7 +222,7 @@
 
 
 <!-- Dendrogram: Graphic -->
-<div style="background-color:#fefefe;border-color:#d6df41;border-width:5px;" class="card" id="dendroGraphic">
+<div style="margin-top:15px;background-color:#fefefe;border-color:#d6df41;border-width:2px;" class="card" id="dendroGraphic">
   <h3 class="card-header">Dendrogram - Graphic</h3>
 
   <div class="card-block">
@@ -236,7 +232,7 @@
 
 
 <!-- Substitution Matrix -->
-<div style="background-color:#fefefe;border-color:#ede040;border-width:5px" class="card" id="subMat">
+<div style="margin-top:15px;background-color:#fefefe;border-color:#ede040;border-width:2px" class="card" id="subMat">
   <h3 class="card-header">Dendrogram - Graphic</h3>
 
   <div class="card-block">
@@ -303,5 +299,4 @@
     </div> <!-- modal div -->
   </div>
 </div>
-
 {% endblock %}
