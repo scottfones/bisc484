@@ -668,7 +668,7 @@ def proteinResults():
 
     scoreTable = []
 
-    scoreTable.append('<table class="table table-condensed table-responsive"><tr><td></td>')
+    scoreTable.append('<table class="table table-sm table-responsive"><tr><td></td>')
 
     for letter in proteinKeys:
         scoreTable.append('<td>' + letter + '</td>')
