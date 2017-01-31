@@ -8,27 +8,33 @@
   <li class="nav-item">
     <a class="nav-link" href="#seqList">Sequence List</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#msaClustal">MSA: Clustal</a>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navMSADropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+      MSA
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navMSADropdown">
+      <a class="dropdown-item" href="#msaClustal">Clustal</a>
+      <a class="dropdown-item" href="#msaFASTA">FASTA</a>
+    </div>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#msaFASTA">MSA: FASTA</a>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navFigDropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+      MSA Figure
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navFigDropdown">
+      <a class="dropdown-item" href="#texIdentity">Identity</a>
+      <a class="dropdown-item" href="#texChemical">Chemical</a>
+      <a class="dropdown-item" href="#texStructural">Structural</a>
+    </div>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#texIdentity">MSA Fig: Identity</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#texChemical">MSA Fig: Chemical</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#texStructural">MSA Fix: Structural</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#dendroASCII">Tree: ASCII</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#dendroGraphic">Tree: Graphic</a>
-  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navTreeDropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+      Dendrogram 
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navTreeDropdown">
+      <a class="nav-item" href="#dendroASCII">ASCII</a>
+      <a class="nav-item" href="#dendroGraphic">Graphic</a>
+    </div>
   <li class="nav-item">
     <a class="nav-link" href="#subMat">Substitution Matrix</a>
   </li>
