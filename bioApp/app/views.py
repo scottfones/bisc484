@@ -2,7 +2,6 @@
 from flask import render_template, flash, redirect, request, make_response
 from app import app
 from .forms import LoginForm, ProteinInputForm
-from werkzeug.utils import secure_filename
 
 
 # 'PYTHON' IMPORTS
@@ -100,8 +99,6 @@ def proteinInput():
 
                 userID = str(uuid.uuid4())
                 accessionRedirect.set_cookie('uuid', userID, expires=cookieExpireDate)
-
-            #filename = secure_filename(file.filename)
 
             file.save(ABS_TMP + userID + '.faa')
 
@@ -373,23 +370,6 @@ def proteinResults():
     for clade in neuroClades:
         mrca = tree.common_ancestor({'name':neuroClades[0]}, {'name':clade})
         mrca.color = 'green'
-
-    asciiTreeFile = ABS_TMP + userID + '_asciiTree.txt'
-    asciiTree = []
-
-    if not os.path.isfile(asciiTreeFile): 
-
-        with open(asciiTreeFile, 'w') as asciiTF:
-            Phylo.draw_ascii(tree, file = asciiTF)
-
-        asciiTF.close()
-
-    inFile = open(asciiTreeFile, 'r')
-
-    for inLine in inFile:
-        asciiTree.append(inLine)
-
-    inFile.close()
 
 
     # Create Graphic Dendrogram
@@ -833,7 +813,6 @@ def proteinResults():
                             texIdentityPDF = texIdentityPDF,
                             texChemicalPDF = texChemicalPDF,
                             texStructuralPDF = texStructuralPDF,
-                            asciiTree = asciiTree,
                             graphicTree = graphicTreeFile,
                             singleLtrFrqDiv = singleLtrFrqDiv,
                             pairFrqHtMpDiv = pairFrqHtMpDiv,

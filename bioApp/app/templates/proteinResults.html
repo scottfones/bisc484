@@ -27,14 +27,8 @@
       <a class="dropdown-item" href="#texStructural">Structural</a>
     </div>
   </li>
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navTreeDropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-      Dendrogram 
-    </a>
-    <div class="dropdown-menu" aria-labelledby="navTreeDropdown">
-      <a class="dropdown-item" href="#dendroASCII">ASCII</a>
-      <a class="dropdown-item" href="#dendroGraphic">Graphic</a>
-    </div>
+  <li class="nav-item">
+      <a class="nav-link" href="#dendroGraphic">Dendrogram</a>
   <li class="nav-item">
     <a class="nav-link" href="#subMat">Substitution Matrix</a>
   </li>
@@ -217,24 +211,13 @@
 </div>
 
 <div class="card-deck">
-<!-- Dendrogram: ASCII -->
-<div style="margin-top:15px;background-color:#fefefe;border-color:#76cf53;border-width:2px" class="card" id="dendroASCII">
-  <h3 class="card-header">Dendrogram - ASCII</h3>
-
-  <div class="card-block">
-    <pre><samp>{% for line in asciiTree %}{{line}}{% endfor %}</samp></pre>
-  </div>
-</div>
-
-
 <!-- Dendrogram: Graphic -->
 <div style="margin-top:15px;background-color:#fefefe;border-color:#d6df41;border-width:2px;" class="card" id="dendroGraphic">
-  <h3 class="card-header">Dendrogram - Graphic</h3>
+  <h3 class="card-header">Dendrogram</h3>
 
   <div class="card-block">
     <img src={{graphicTree}} class="img-fluid" alt="Dendrogram Figure">	
   </div>
-</div>
 </div>
 
 <!-- Substitution Matrix -->
@@ -304,5 +287,6 @@
       </div>
     </div> <!-- modal div -->
   </div>
+</div>
 </div>
 {% endblock %}
