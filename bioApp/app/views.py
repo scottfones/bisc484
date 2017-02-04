@@ -326,15 +326,15 @@ def proteinResults():
         tree = tree.as_phyloxml()
         tree.root.color='gray'
 
-        matplotlib.rc('font', size=24)
+        matplotlib.rc('font', size=16)
         matplotlib.rc('lines', linewidth=4.0)
-        pylab.rcParams['figure.figsize'] = 25, 20
+        pylab.rcParams['figure.figsize'] = 12.5, 10
         pylab.rcParams['figure.autolayout'] = True
         pylab.rcParams['savefig.bbox'] = 'tight'
         Phylo.draw(tree, do_show=False, axes=None)
         pylab.axis('off')
         
-        pylab.savefig(graphicTreeFile, dpi=200)
+        pylab.savefig(graphicTreeFile, dpi=100)
 
     graphicTreeFile = 'static/tmp/' + userID + '_graphicTree.png'
 
