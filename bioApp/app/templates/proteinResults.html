@@ -17,6 +17,10 @@
       <a class="dropdown-item" href="#msaFASTA">FASTA</a>
     </div>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#texIdentity">MSA Figure</a>
+  </li>
+  <!-- MSA Dropdown 
   <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" id="navFigDropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
       MSA Figure
@@ -27,8 +31,10 @@
       <a class="dropdown-item" href="#texStructural">Structural</a>
     </div>
   </li>
+  -->
   <li class="nav-item">
       <a class="nav-link" href="#dendroGraphic">Dendrogram</a>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="#subMat">Substitution Matrix</a>
   </li>
@@ -107,9 +113,14 @@
           \usepackage{texshade} <br>
           \usepackage{inconsolata} <br>
           \begin{document} <br>
-          \begin{texshade}{alignmentFile.aln} <br>
+          \begin{texshade}{alignmentFile.txt} <br>
           \shadingmode[allmatchspecial]{identical}  <br>
+          \nomatchresidues{Gray70}{White}{upper}{bf} <br>
+          \conservedresidues{Black}{LightCyan}{upper}{bf} <br>
+          \allmatchresidues{White}{Red}{upper}{bf} <br>
           \showcaption[bottom]{\textbf{Protein MSA with Identity Highlighting}}  <br>
+          \showruler{1}{top} <br>
+          \hidenumbering <br>
           \hideconsensus  <br>
           \namesfootnotesize  <br>
           \residuesfootnotesize  <br>
@@ -126,89 +137,6 @@
   </div>
 </div>
 
-
-<!-- MSA Figure: Chemical -->
-<div style="margin-top:15px;background-color:#fefefe;border-color:#009d86;border-width:2px" class="card" id="texChemical">
-  <h3 class="card-header">MSA Figure - Chemical Highlighting</h3>
-
-  <div class="card-block">
-    <div class="row">
-      <div class="col-8">
-        <object data={{texChemicalPDF}} type="application/pdf" width="100%" height="500px">
-          <p>
-            There was a problem displaying the pdf. You can
-            download it directly <a href={{texChemicalPDF}}>here</a>
-          </p>
-        </object>
-      </div>
-
-      <div class="col-4 align-self-end">
-        <p class="card-text">
-          <b>LaTeX Code:</b><br>
-          \documentclass[preview]{standalone} <br>
-          \usepackage{texshade} <br>
-          \usepackage{inconsolata} <br>
-          \begin{document} <br>
-          \begin{texshade}{alignmentFile.aln} <br>
-          \shadingmode[chemical]{functional}  <br>
-          \showcaption[bottom]{\textbf{Protein MSA with Chemical Highlighting}}  <br>
-          \hideconsensus  <br>
-          \namesfootnotesize  <br>
-          \residuesfootnotesize  <br>
-          \numberingscriptsize <br>
-          \showlegend  <br>
-          \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
-          \end{texshade}  <br>
-          \end{document} <br>
-
-          <a class="btn btn-primary btn-block" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
-        </p>
-      </div>
-    </div> <!-- row div -->
-  </div>
-</div>
-
-
-<!-- MSA Figure: Structural -->
-<div style="margin-top:15px;background-color:#fefefe;border-color:#008774;border-width:2px" class="card" id="texStructural">
-  <h3 class="card-header">MSA Figure - Structural Highlighting</h3>
-
-  <div class="card-block">
-    <div class="row">
-      <div class="col-8">
-        <object data={{texStructuralPDF}} type="application/pdf" width="100%" height="500px">
-          <p>
-            There was a problem displaying the pdf. You can
-            download it directly <a href={{texStructuralPDF}}>here</a>
-          </p>
-        </object>
-      </div>
-
-      <div class="col-4 align-self-end">
-        <p class="card-text">
-          <b>LaTeX Code:</b><br>
-          \documentclass[preview]{standalone} <br>
-          \usepackage{texshade} <br>
-          \usepackage{inconsolata} <br>
-          \begin{document} <br>
-          \begin{texshade}{alignmentFile.aln} <br>
-          \shadingmode[structure]{functional}  <br>
-          \showcaption[bottom]{\textbf{Protein MSA with Structural Highlighting}}  <br>
-          \hideconsensus  <br>
-          \namesfootnotesize  <br>
-          \residuesfootnotesize  <br>
-          \numberingscriptsize <br>
-          \showlegend  <br>
-          \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
-          \end{texshade}  <br>
-          \end{document} <br>
-
-          <a class="btn btn-primary btn-block" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
-        </p>
-      </div>
-    </div> <!-- row div -->
-  </div>
-</div>
 
 <div class="card-deck">
 <!-- Dendrogram: Graphic -->

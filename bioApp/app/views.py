@@ -238,12 +238,17 @@ def proteinResults():
             texfile.write('\\begin{document}\n')
             texfile.write('\\begin{texshade}{%s}\n' % alignFile)
             texfile.write('\\shadingmode[allmatchspecial]{identical}\n')
+            texfile.write('\\nomatchresidues{Gray70}{White}{upper}{bf}\n')
+            texfile.write('\\conservedresidues{Black}{LightCyan}{upper}{bf}\n')
+            texfile.write('\\allmatchresidues{White}{Red}{upper}{bf}\n')
+            texfile.write('\\showruler{1}{top}\n')
+            texfile.write('\\hidenumbering\n')
             texfile.write('\\showcaption[bottom]{\\textbf{Protein MSA with Identity Highlighting}}\n')
-            texfile.write('\\label{fig:blast_tc66374}\n')
             texfile.write('\\hideconsensus\n')
             texfile.write('\\namesfootnotesize\n')
             texfile.write('\\residuesfootnotesize\n')
             texfile.write('\\numberingscriptsize\n')
+            texfile.write('\\legendfootnotesize\n')
             texfile.write('\\showlegend\n')
             texfile.write('\\end{texshade}\n')
             texfile.write('\\end{document}\n')
@@ -253,63 +258,6 @@ def proteinResults():
         os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texIdentityFile))
     
     texIdentityPDF = 'static/tmp/' + userID + '_identity.pdf'
-
-    # Generate Latex Chemical Similarity Alignment
-    texChemicalFile = ABS_TMP + userID + '_chemical.tex'
-
-    if not os.path.isfile(texChemicalFile):
-       
-        with open(texChemicalFile, 'w') as texfile:
-       
-            texfile.write('\\documentclass[preview]{standalone}\n')
-            texfile.write('\\usepackage{texshade}\n')
-            texfile.write('\\usepackage{inconsolata}\n')
-            texfile.write('\\begin{document}\n')
-            texfile.write('\\begin{texshade}{%s}\n' % alignFile)
-            texfile.write('\\shadingmode[chemical]{functional}\n')
-            texfile.write('\\showcaption[bottom]{\\textbf{Protein MSA with Chemical Similarity Highlighting}}\n')
-            texfile.write('\\hideconsensus\n')
-            texfile.write('\\namesfootnotesize\n')
-            texfile.write('\\residuesfootnotesize\n')
-            texfile.write('\\numberingscriptsize\n')
-            texfile.write('\\showlegend\n')
-            texfile.write('\\end{texshade}\n')
-            texfile.write('\\end{document}\n')
-
-        texfile.close()
-
-        os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texChemicalFile))
-    
-    texChemicalPDF = 'static/tmp/' + userID + '_chemical.pdf'    
-    
-
-    # Generate Latex Structural Similarity Alignment
-    texStructuralFile = ABS_TMP + userID + '_structural.tex'
-
-    if not os.path.isfile(texStructuralFile):
-
-        with open(texStructuralFile, 'w') as texfile:
-       
-            texfile.write('\\documentclass[preview]{standalone}\n')
-            texfile.write('\\usepackage{texshade}\n')
-            texfile.write('\\usepackage{inconsolata}\n')
-            texfile.write('\\begin{document}\n')
-            texfile.write('\\begin{texshade}{%s}\n' % alignFile)
-            texfile.write('\\shadingmode[structure]{functional}\n')
-            texfile.write('\\showcaption[bottom]{\\textbf{Protein MSA with Structural Similarity Highlighting}}\n')
-            texfile.write('\\hideconsensus\n')
-            texfile.write('\\namesfootnotesize\n')
-            texfile.write('\\residuesfootnotesize\n')
-            texfile.write('\\numberingscriptsize\n')
-            texfile.write('\\showlegend\n')
-            texfile.write('\\end{texshade}\n')
-            texfile.write('\\end{document}\n')
-
-        texfile.close()
-
-        os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texStructuralFile))
-    
-    texStructuralPDF = 'static/tmp/' + userID + '_structural.pdf'  
 
 
     # Create ASCII Dendrogram
@@ -811,8 +759,6 @@ def proteinResults():
                             alignmentClustal = alignmentClustal,
                             alignmentFASTA = alignmentFASTA,
                             texIdentityPDF = texIdentityPDF,
-                            texChemicalPDF = texChemicalPDF,
-                            texStructuralPDF = texStructuralPDF,
                             graphicTree = graphicTreeFile,
                             singleLtrFrqDiv = singleLtrFrqDiv,
                             pairFrqHtMpDiv = pairFrqHtMpDiv,
