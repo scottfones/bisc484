@@ -20,18 +20,6 @@
   <li class="nav-item">
     <a class="nav-link" href="#texIdentity">MSA Figure</a>
   </li>
-  <!-- MSA Dropdown 
-  <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navFigDropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-      MSA Figure
-    </a>
-    <div class="dropdown-menu" aria-labelledby="navFigDropdown">
-      <a class="dropdown-item" href="#texIdentity">Identity</a>
-      <a class="dropdown-item" href="#texChemical">Chemical</a>
-      <a class="dropdown-item" href="#texStructural">Structural</a>
-    </div>
-  </li>
-  -->
   <li class="nav-item">
       <a class="nav-link" href="#dendroGraphic">Dendrogram</a>
   </li>
@@ -137,86 +125,86 @@
 
 
 <div class="row">
-<div class="col-6">
-<!-- Dendrogram: Graphic -->
-<div style="height:100%;margin-top:15px;background-color:#fefefe;border-color:#d6df41;border-width:2px;" class="card" id="dendroGraphic">
-  <h3 class="card-header">Dendrogram</h3>
+  <div class="col-xl-6">
+  <!-- Dendrogram: Graphic -->
+    <div style="height:100%;margin-top:15px;background-color:#fefefe;border-color:#d6df41;border-width:2px;" class="card" id="dendroGraphic">
+      <h3 class="card-header">Dendrogram</h3>
 
-  <div class="card-block">
-    <img src={{graphicTree}} class="img-fluid" alt="Dendrogram Figure">	
-  </div>
-</div>
-</div>
-
-<div class="col-6">
-<!-- Substitution Matrix -->
-<div style="margin-top:15px;background-color:#fefefe;border-color:#ede040;border-width:2px" class="card" id="subMat">
-  <h3 class="card-header">Substitution Matrix</h3>
-
-  <div class="card-block">
-    {{singleLtrFrqDiv|safe}}
-    <hr>
-    {{pairFrqHtMpDiv|safe}}
-    <hr>
-    {{scoreMatDiv|safe}}
-
-
-    <!-- Residues By Type Button Modal -->
-    <button type="button" style="width:700px;" class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#subModal">
-      Sort Residues By Type
-    </button>
-
-    <!-- Residues by Type Modal -->
-    <div class="modal fade" id="subModal" tabindex="-1" role="dialog" aria-labelledby="subModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" id="subModalLabel">Substitution Matrix: Ordered by Residue Type</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-
-          <div class="modal-body">
-            {{resTypeDiv|safe}}
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Close</button>
-          </div>
-        </div>
+      <div class="card-block">
+        <img src={{graphicTree}} class="img-fluid" alt="Dendrogram Figure">	
       </div>
-    </div> <!-- modal div -->
-
-    <!-- Residues as Text Button Modal -->
-    <button type="button" style="width:700px;margin-top:2px;" class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#txtModal">
-      Get Matrix as Text
-    </button>
-
-
-    <!-- Residues as TextModal -->
-    <div class="modal fade" id="txtModal" tabindex="-1" role="dialog" aria-labelledby="subModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" id="subModalLabel">Substitution Matrix: Text Formatted</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-
-          <div class="modal-body">
-            {{scoreTable|safe}}
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div> <!-- modal div -->
+    </div>
   </div>
-</div>
-</div>
+
+  <div class="col-xl-6">
+    <!-- Substitution Matrix -->
+    <div style="margin-top:15px;background-color:#fefefe;border-color:#ede040;border-width:2px" class="card" id="subMat">
+      <h3 class="card-header">Substitution Matrix</h3>
+
+      <div class="card-block">
+        {{singleLtrFrqDiv|safe}}
+        <hr>
+        {{pairFrqHtMpDiv|safe}}
+        <hr>
+        {{scoreMatDiv|safe}}
+
+
+        <!-- Residues By Type Button Modal -->
+        <button type="button" style="width:700px;" class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#subModal">
+          Sort Residues By Type
+        </button>
+
+        <!-- Residues by Type Modal -->
+        <div class="modal fade" id="subModal" tabindex="-1" role="dialog" aria-labelledby="subModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="subModalLabel">Substitution Matrix: Ordered by Residue Type</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                {{resTypeDiv|safe}}
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div> <!-- modal div -->
+
+        <!-- Residues as Text Button Modal -->
+        <button type="button" style="width:700px;margin-top:2px;" class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#txtModal">
+          Get Matrix as Text
+        </button>
+
+
+        <!-- Residues as TextModal -->
+        <div class="modal fade" id="txtModal" tabindex="-1" role="dialog" aria-labelledby="subModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="subModalLabel">Substitution Matrix: Text Formatted</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                {{scoreTable|safe}}
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div> <!-- modal div -->
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
