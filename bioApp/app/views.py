@@ -1,7 +1,7 @@
 # FLASK IMPORTS
 from flask import render_template, flash, redirect, request, make_response
 from app import app
-from .forms import LoginForm, ProteinInputForm
+from .forms import ProteinInputForm
 
 
 # 'PYTHON' IMPORTS
@@ -612,26 +612,27 @@ def proteinResults():
 
  
     # Generate Substitution Matrix by Residue Type
-    resTypeMat = []
+    colorMat = [[.1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [.0,.2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [.0,.2,.2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [.0,.2,.2,.2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.3,.3,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.4,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.4,.4,1,1,1,1,1,1,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.4,.4,.4,1,1,1,1,1,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.4,.4,.4,.4,1,1,1,1,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.5,1,1,1,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.6,1,1,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.6,.6,1,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.6,.6,.6,1,1,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.6,.6,.6,.6,1,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.6,.6,.6,.6,.6,1,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.7,1,1,1],
+                [.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.7,.7,1,1],
+                [.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.7,.7,.7,1],
+                [.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.8]]
 
-    for i in range(20):
-        if i == 0:
-            resTypeMat.append(20*[0])
-        if i > 0 and i <= 3:
-            resTypeMat.append(20*[2])
-        if i > 3 and i <= 5:
-            resTypeMat.append(20*[3])
-        if i > 5 and i <= 9:
-            resTypeMat.append(20*[5])
-        if i == 10:
-            resTypeMat.append(20*[6])
-        if i > 10 and i <= 15:
-            resTypeMat.append(20*[7])
-        if i > 15 and i <= 18:
-            resTypeMat.append(20*[8])
-        if i == 19:
-            resTypeMat.append(20*[10])
-           
     resTypeKeys = ['C', 'R', 'K', 'H', 'E', 'D', 'Q', 'N', 'T', 'S', 
                    'G', 'A', 'V', 'I', 'L', 'M', 'F', 'Y', 'W', 'P'] 
             
@@ -656,27 +657,47 @@ def proteinResults():
         rowList = []
 
         for y_i in range(0,(x_i+1)):
-            resTypeVal = resTypeMat[x_i][0]
+            yPro = resTypeKeys[y_i]
 
-            if resTypeVal == 0:
-                resHovDesc = 'Hydrophilic, Special Case'
-            elif resTypeVal == 2:
-                resHovDesc = 'Hydrophilic, Basic'
-            elif resTypeVal == 3:
-                resHovDesc = 'Hydrophilic, Acidic'
-            elif resTypeVal == 5:
-                resHovDesc = 'Hydrophilic, Polar'
-            elif resTypeVal == 6:
-                resHovDesc = 'No Side Chain'
-            elif resTypeVal == 7:
-                resHovDesc = 'Hydrophobic, Aliphatic'
-            elif resTypeVal == 8:
-                resHovDesc = 'Hydrophobic, Aromatic'
-            elif resTypeVal == 10:
-                resHovDesc = 'Hydrophobic, Special Case'
+            xProType = ''
+            yProType = ''
 
-            rowList.append(xPro + ', ' + resTypeKeys[y_i] + ': ' + str(resTypeAnn[x_i][y_i]) + '<br>' + xPro + ': ' + resHovDesc)
+            if xPro == 'C':
+                xProType = 'Hydrophilic, Special Case'
+            elif xPro in ['R', 'K', 'H']:
+                xProType = 'Hydrophilic, Basic'
+            elif xPro in ['E', 'D']:
+                xProType = 'Hydrophilic, Acidic'
+            elif xPro in ['Q','N','T','S']:
+                xProType = 'Hydophilic, Polar'
+            elif xPro == 'G':
+                xProType = 'No Side Chain'
+            elif xPro in ['A','V','I','L','M']:
+                xProType = 'Hydrophobic, Aliphatic'
+            elif xPro in ['F','Y','W']:
+                xProType = 'Hydrophobic, Aromatic'
+            elif xPro == 'P':
+                xProType = 'Hydrophobic, Special Case'
 
+            if yPro == 'C':
+                yProType = 'Hydrophilic, Special Case'
+            elif yPro in ['R', 'K', 'H']:
+                yProType = 'Hydrophilic, Basic'
+            elif yPro in ['E', 'D']:
+                yProType = 'Hydrophilic, Acidic'
+            elif yPro in ['Q','N','T','S']:
+                yProType = 'Hydophilic, Polar'
+            elif yPro == 'G':
+                yProType = 'No Side Chain'
+            elif yPro in ['A','V','I','L','M']:
+                yProType = 'Hydrophobic, Aliphatic'
+            elif yPro in ['F','Y','W']:
+                yProType = 'Hydrophobic, Aromatic'
+            elif yPro == 'P':
+                yProType = 'Hydrophobic, Special Case'
+            
+            rowList.append(xPro + ', ' + yPro + ': ' + str(resTypeAnn[x_i][y_i]) + '<br>' + xPro + ': ' + xProType + '<br>' + yPro + ': ' + yProType)
+         
         hover.append(rowList)
 
 
@@ -686,16 +707,19 @@ def proteinResults():
         for m, val in enumerate(row):
             var = resTypeAnn[n][m]
             
-            resCat = resTypeMat[n][0]
-            if resCat == 0:
+            resCat = colorMat[n][m]
+
+            if resCat == .0:
+                preColor = '#101010'
+            if resCat == .1:
                 preColor = '#FAFAFA'
-            elif resCat > 0 and resCat < 6:
+            elif resCat > .1 and resCat < .5:
                 preColor = '#E0E0E0'
-            elif resCat == 6:
+            elif resCat == .5:
                 preColor = '#D0D0D0'
-            elif resCat > 6 and resCat <10:
+            elif resCat > .6 and resCat < .8:
                 preColor = '#303030'
-            elif resCat == 10:
+            elif resCat == .8:
                 preColor = '#000000'
 
 
@@ -711,9 +735,10 @@ def proteinResults():
                     showarrow = False) 
                 )
 
-    colorscale = 'Viridis'
+    colorscale =    [[0.0, '#FAFAFA'], [.1, '#440154'], [.2, '#414387'], [.3, '#355F8D'], [.4, '#21918C'],
+                     [.5, '#24A884'], [.6, '#44BE70'], [.7, '#7BD151'], [.8, '#FDE725'],[1.0, '#FFFFFF']]
 
-    trace = go.Heatmap(x=resTypeKeys, y=resTypeKeys, z=resTypeMat, text=hover, hoverinfo='text', colorscale=colorscale, showscale=False)
+    trace = go.Heatmap(x=resTypeKeys, y=resTypeKeys, z=colorMat, text=hover, hoverinfo='text', colorscale=colorscale, showscale=False)
 
     fig = go.Figure(data=[trace])
     fig['layout'].update(
