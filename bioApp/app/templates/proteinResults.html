@@ -3,7 +3,7 @@
 <div id="navSpy"
 <ul class="navbar-nav ml-auto">
   <li class="nav-item">
-    <a class="navbar-brand nav-link" href="#proResults">Protein Results</a>
+    <a class="navbar-brand nav-link active" href="#proResults">Protein Results</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="#seqList">Sequence List</a>
@@ -17,8 +17,15 @@
       <a class="dropdown-item" href="#msaFASTA">FASTA</a>
     </div>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#texIdentity">MSA Figure</a>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navMSADropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+      MSA Figure
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navMSADropdown">
+      <a class="dropdown-item" href="#texIdentity">Identity</a>
+      <a class="dropdown-item" href="#texChemical">Chemical</a>
+      <a class="dropdown-item" href="#texStructural">Structural</a>
+    </div>
   </li>
   <li class="nav-item">
       <a class="nav-link" href="#dendroGraphic">Dendrogram</a>
@@ -81,17 +88,12 @@
 
 <!-- MSA Figure: Identity -->
 <div style="margin-top:15px;background-color:#fefefe;border-color:#007ebc;border-width:2px" class="card" id="texIdentity">
-  <h3 class="card-header">MSA Figure</h3>
+  <h3 class="card-header">MSA Figure - Identity Highlighting</h3>
 
   <div class="card-block">
     <div class="row">
-      <div class="col-8">
-        <object data={{texIdentityPDF}} type="application/pdf" width="100%" height="500px"> 
-          <p>
-            There was a problem displaying the pdf. You can 
-            download it directly <a href={{texIdentityPDF}}>here</a>
-          </p>
-        </object>
+      <div style="overflow:auto;height:600px" class="col-8">
+        <img style="width:600px;height:auto;" src={{pngIdentityFile}} class="img-fluid" alt="Identity MSA">
       </div>
 
       <div class="col-4 align-self-end">
@@ -116,6 +118,82 @@
           \end{texshade}  <br>
           \end{document} <br>
          
+          <a style="width:75%;" class="btn btn-primary" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
+          <a style="width:20%;" class="btn btn-warning" target="_blank" href="https://docs.google.com/document/d/1ns7LTYtKZAoudeRsHxum8EMMJez6Ejht6_P8hntc6YY/edit?usp=sharing" role="button">Help</a>
+        </p>
+      </div>
+    </div> <!-- row div -->
+  </div>
+</div>
+
+
+<!-- MSA Figure: Chemical -->
+<div style="margin-top:15px;background-color:#fefefe;border-color:#007ebc;border-width:2px" class="card" id="texChemical">
+  <h3 class="card-header">MSA Figure - Chemical Highlighting</h3>
+
+  <div class="card-block">
+    <div class="row">
+      <div style="overflow:auto;height:600px" class="col-8">
+        <img style="width:600px;height:auto;" src={{pngChemicalFile}} class="img-fluid" alt="Chemical MSA">
+      </div>
+
+      <div class="col-4 align-self-end">
+        <p class="card-text">
+          <b>LaTeX Code:</b><br>
+          \documentclass[preview]{standalone} <br>
+          \usepackage{texshade} <br>
+          \usepackage{inconsolata} <br>
+          \begin{document} <br>
+          \begin{texshade}{alignmentFile.txt} <br>
+          \shadingmode[chemical]{functional}  <br>
+          \showcaption[bottom]{\textbf{Protein MSA with Chemical Highlighting}}  <br>
+          \hideconsensus  <br>
+          \namesfootnotesize  <br>
+          \residuesfootnotesize  <br>
+          \numberingtiny<br>
+          \showlegend  <br>
+          \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
+          \end{texshade}  <br>
+          \end{document} <br>
+         
+          <a style="width:75%;" class="btn btn-primary" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
+          <a style="width:20%;" class="btn btn-warning" target="_blank" href="https://docs.google.com/document/d/1ns7LTYtKZAoudeRsHxum8EMMJez6Ejht6_P8hntc6YY/edit?usp=sharing" role="button">Help</a>
+        </p>
+      </div>
+    </div> <!-- row div -->
+  </div>
+</div>
+
+
+<!-- MSA Figure: Structural-->
+<div style="margin-top:15px;background-color:#fefefe;border-color:#007ebc;border-width:2px" class="card" id="texStructural">
+  <h3 class="card-header">MSA Figure - Structural Highlighting</h3>
+
+  <div class="card-block">
+    <div class="row">
+      <div style="overflow:auto;height:600px;" class="col-8">
+        <img style="width:600px;height:auto;" src={{pngStructuralFile}} class="img-fluid" alt="Structural MSA">
+      </div>
+
+      <div class="col-4 align-self-end">
+        <p class="card-text">
+          <b>LaTeX Code:</b><br>
+          \documentclass[preview]{standalone} <br>
+          \usepackage{texshade} <br>
+          \usepackage{inconsolata} <br>
+          \begin{document} <br>
+          \begin{texshade}{alignmentFile.txt} <br>
+          \shadingmode[structural]{functional}  <br>
+          \showcaption[bottom]{\textbf{Protein MSA with Structural Highlighting}}  <br>
+          \hideconsensus  <br>
+          \namesfootnotesize  <br>
+          \residuesfootnotesize  <br>
+          \numberingtiny<br>
+          \showlegend  <br>
+          \movelegend{0cm}{0cm} % {Horizontal}{Vertical} Offsets <br>
+          \end{texshade}  <br>
+          \end{document} <br>
+
           <a style="width:75%;" class="btn btn-primary" target="_blank" href="https://www.overleaf.com/latex/templates/standalone-msa-figure/rbgrxrmctccc" role="button">Modify Template</a>
           <a style="width:20%;" class="btn btn-warning" target="_blank" href="https://docs.google.com/document/d/1ns7LTYtKZAoudeRsHxum8EMMJez6Ejht6_P8hntc6YY/edit?usp=sharing" role="button">Help</a>
         </p>

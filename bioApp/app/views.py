@@ -227,35 +227,57 @@ def proteinResults():
 
     
     # Generate Latex Identity Alignment
-    texIdentityFile = ABS_TMP + userID + '_identity.tex'
+    texFile = ABS_TMP + userID + '_identity.tex'
+    pdfFile = ABS_TMP + userID + '_identity.pdf'
+    pngFile = ABS_TMP + userID + '_identity.png'
 
-    if not os.path.isfile(texIdentityFile):
-        with open(texIdentityFile, 'w') as texfile:
+    if not os.path.isfile(pngFile):
+        with open(texFile, 'w') as texfile:
         
-            texfile.write('\\documentclass[preview]{standalone}\n')
-            texfile.write('\\usepackage{texshade}\n')
-            texfile.write('\\usepackage{inconsolata}\n')
-            texfile.write('\\begin{document}\n')
-            texfile.write('\\begin{texshade}{%s}\n' % alignFile)
-            texfile.write('\\shadingmode[allmatchspecial]{identical}\n')
-            texfile.write('\\nomatchresidues{Gray70}{White}{upper}{bf}\n')
-            texfile.write('\\conservedresidues{Black}{LightCyan}{upper}{bf}\n')
-            texfile.write('\\allmatchresidues{White}{Red}{upper}{bf}\n')
-            texfile.write('\\showcaption[bottom]{\\textbf{Protein MSA with Identity Highlighting}}\n')
-            texfile.write('\\hideconsensus\n')
-            texfile.write('\\namesfootnotesize\n')
-            texfile.write('\\residuesfootnotesize\n')
-            texfile.write('\\numberingtiny\n')
-            texfile.write('\\legendfootnotesize\n')
-            texfile.write('\\showlegend\n')
-            texfile.write('\\end{texshade}\n')
-            texfile.write('\\end{document}\n')
+            texfile.write('\\documentclass[preview]{standalone}\n\\usepackage{texshade}\n\\begin{document}\n\\begin{texshade}{%s}\n\\shadingmode[allmatchspecial]{identical}\n\\nomatchresidues{Gray70}{White}{upper}{bf}\n\\conservedresidues{Black}{LightCyan}{upper}{bf}\n\\allmatchresidues{White}{Red}{upper}{bf}\n\\showcaption[bottom]{\\textbf{Protein MSA with Identity Highlighting}}\n\\hideconsensus\n\\namesfootnotesize\n\\residuesfootnotesize\n\\numberingtiny\n\\legendfootnotesize\n\\showlegend\n\\end{texshade}\n\\end{document}\n' % alignFile)
 
         texfile.close()
 
-        os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texIdentityFile))
-    
-    texIdentityPDF = 'static/tmp/' + userID + '_identity.pdf'
+        os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texFile))
+        os.system('pdftoppm -r 200 -png %s > %s' % (pdfFile,pngFile))
+
+    pngIdentityFile = 'static/tmp/' + userID + '_identity.png'
+
+
+    #Generate Latex Chemical Alignment
+    texFile = ABS_TMP + userID + '_chemical.tex'
+    pdfFile = ABS_TMP + userID + '_chemical.pdf'
+    pngFile = ABS_TMP + userID + '_chemical.png'
+
+    if not os.path.isfile(pngFile):
+        with open(texFile, 'w') as texfile:
+
+            texfile.write('\\documentclass[preview]{standalone}\n\\usepackage{texshade}\n\\begin{document}\n\\begin{texshade}{%s}\n\\shadingmode[chemical]{functional}\n\\showcaption[bottom]{\\textbf{Protein MSA with Chemical Highlighting}}\n\\hideconsensus\n\\namesfootnotesize\n\\residuesfootnotesize\n\\numberingtiny\n\\legendfootnotesize\n\\showlegend\n\\end{texshade}\n\\end{document}\n' % alignFile)
+
+        texfile.close()
+
+        os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texFile))
+        os.system('pdftoppm -r 200 -png %s > %s' % (pdfFile,pngFile))
+
+    pngChemicalFile = 'static/tmp/' + userID + '_chemical.png'
+
+
+    #Generate Latex Chemical Alignment
+    texFile = ABS_TMP + userID + '_structural.tex'
+    pdfFile = ABS_TMP + userID + '_structural.pdf'
+    pngFile = ABS_TMP + userID + '_structural.png'
+
+    if not os.path.isfile(pngFile):
+        with open(texFile, 'w') as texfile:
+
+            texfile.write('\\documentclass[preview]{standalone}\n\\usepackage{texshade}\n\\begin{document}\n\\begin{texshade}{%s}\n\\shadingmode[structure]{functional}\n\\showcaption[bottom]{\\textbf{Protein MSA with Structural Highlighting}}\n\\hideconsensus\n\\namesfootnotesize\n\\residuesfootnotesize\n\\numberingtiny\n\\legendfootnotesize\n\\showlegend\n\\end{texshade}\n\\end{document}\n' % alignFile)
+
+        texfile.close()
+
+        os.system('pdflatex -output-directory=%s %s' % (ABS_TMP,texFile))
+        os.system('pdftoppm -r 200 -png %s > %s' % (pdfFile,pngFile))
+
+    pngStructuralFile = 'static/tmp/' + userID + '_structural.png'
 
 
     # Create ASCII Dendrogram
@@ -787,7 +809,9 @@ def proteinResults():
                             sequenceList = sequenceList,
                             alignmentClustal = alignmentClustal,
                             alignmentFASTA = alignmentFASTA,
-                            texIdentityPDF = texIdentityPDF,
+                            pngIdentityFile = pngIdentityFile,
+                            pngChemicalFile = pngChemicalFile,
+                            pngStructuralFile = pngStructuralFile,
                             graphicTree = graphicTreeFile,
                             singleLtrFrqDiv = singleLtrFrqDiv,
                             pairFrqHtMpDiv = pairFrqHtMpDiv,
