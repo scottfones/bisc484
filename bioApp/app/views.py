@@ -133,6 +133,13 @@ def proteinResults():
     
     # Read User UUID
     userID = request.cookies.get('uuid')
+
+    # Check History State
+    if userID is None:
+       flash(u'Records not found. Please resubmit.', 'error') 
+       return redirect('/proteinInput')
+
+    # Initialize sequence list
     seqFile = ABS_TMP + userID + '.faa'
     sequenceList = []
 
