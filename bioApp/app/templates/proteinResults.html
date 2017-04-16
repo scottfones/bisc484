@@ -66,29 +66,35 @@
   </div>
 </div>  
 
-<div class="card-deck">
+
+<div class="row">
+  <div style="margin-top:15px" class="col-lg-6">
     <!-- MSA: Clustal -->
-    <div style="margin-top:15px;background-color:#fefefe;border-color:#42427f;border-width:2px" class="card" id="msaClustal">
+    <div style="background-color:#fefefe;border-color:#42427f;border-width:2px" class="card" id="msaClustal">
       <h3 class="card-header">MSA - Clustal Output</h3>
 
       <div class="card-block">
         <pre><samp>{% for line in alignmentClustal %}
 {{line}}{% endfor %}</samp>
         </pre>
-      </div>  
-    </div>
+      </div> <!-- block div -->
+    </div> <!-- card div -->
+  </div>  <!-- col div -->
 
+  <div style="margin-top:15px" class="col-xl-6">
     <!-- MSA: FASTA-->
-    <div style="margin-top:15px;background-color:#fefefe;border-color:#286289;border-width:2px" class="card" id="msaFASTA">
+    <div style="background-color:#fefefe;border-color:#286289;border-width:2px" class="card" id="msaFASTA">
       <h3 class="card-header">MSA - FASTA Output</h3>
 
       <div class="card-block">
         <pre><samp>{% for line in alignmentFASTA %}
 {{line}}{% endfor %}</samp>
         </pre>
-      </div>
-    </div>
-</div>
+      </div> <!-- block div -->
+    </div> <!-- card div -->
+  </div>  <!-- col div -->
+</div>  <!-- row div -->
+
 
 <!-- MSA Figure: Identity -->
 <div style="margin-top:15px;background-color:#fefefe;border-color:#007ebc;border-width:2px" class="card" id="texIdentity">
@@ -215,9 +221,9 @@
 
       <div class="card-block">
         <img src={{graphicTree}} class="img-fluid" alt="Dendrogram Figure">	
-      </div>
-    </div>
-  </div>
+      </div> <!-- block div -->
+    </div> <!-- card div -->
+  </div> <!-- col div -->
 
   <div style="margin-top:15px" class="col-xl-6">
     <!-- Substitution Matrix -->
