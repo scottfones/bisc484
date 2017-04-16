@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+<div style="display:none;" class="loader" id="loaderDiv"></div>
+
+<div id="contentDiv">
 <div class="jumbotron" id="proResults">
   <h1>Protein Input</h1>
 </div>
@@ -121,5 +124,15 @@
   </div> <!-- col div -->
 
 </div> <!-- end row div -->
+</div> <!-- content div -->
+{% endblock %}
 
+
+{% block scripts %}
+<script>
+$( ".btn-primary" ).click(function() {
+  document.getElementById("loaderDiv").style.display = "block";
+  document.getElementById("contentDiv").style.display = "block";
+});
+</script>
 {% endblock %}
