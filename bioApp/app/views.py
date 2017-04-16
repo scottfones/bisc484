@@ -825,10 +825,15 @@ def proteinResults():
                             scoreTable = scoreTable)
 
 
+@app.route('/dnaInput')
+def dnaInput():
+    return render_template('dnaInput.html',
+                           title = 'DNA Input')
+
 
 @app.route('/')
 @app.route('/index')
 def index():
 
     return render_template('index.html',
-                           title='Home')
+                           title = 'Home')
