@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="loader" id="loaderDiv"></div>
+
+
+<div style="display:none;" id="contentDiv" class="animate-bottom">
+<div class="jumbotron" id="abiResults">
+  <h1>ABI File Results</h1>
+</div>
+
+
+<!-- Sequences -->
+<div style="margin-top:15px;background-color:#fefefe;border-color:#492164;border-width:2px" class="card" id="seqs">
+  <h3 class="card-header">Sequences</h3>
+
+  <div class="card-block">
+    <p><strong>Raw Sequence</strong><p>
+    <samp style="word-break:break-all;word-wrap:break-word;">{{raw_sequence}}</samp>
+    <p><strong>Trimmed Sequence</strong><p>
+    <samp style="word-break:break-all;word-wrap:break-word;">{{trim_sequence}}</samp>
+  </div>
+</div>  
+
+
+<!-- Sequencing Plot -->
+<div style="margin-top:15px;height:100%;background-color:#fefefe;border-color:#d6df41;border-width:2px;" class="card" id="abiPlot">
+  <h3 class="card-header">Sequencing Plot</h3>
+
+  <div class="card-block">
+    {{abi_plot_div|safe}}
+  </div> <!-- block div -->
+</div> <!-- card div -->
+
+</div> <!-- content div -->
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$( document ).ready(function() {
+  document.getElementById("loaderDiv").style.display = "none";
+  document.getElementById("contentDiv").style.display = "block";
+});
+</script>
+{% endblock %} 

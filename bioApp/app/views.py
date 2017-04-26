@@ -1,7 +1,8 @@
 # FLASK IMPORTS
 from flask import render_template, flash, redirect, request, make_response
 from app import app
-from .forms import ProteinInputForm
+from .forms import ProteinInputForm, ABIInputForm
+from werkzeug import secure_filename
 
 
 # 'PYTHON' IMPORTS
@@ -32,13 +33,42 @@ ABS_TMP = os.path.join(APP_ROOT, 'static/tmp/')
 
 # Config for File Uploads
 UPLOAD_FOLDER = 'static/tmp/' 
-ALLOWED_EXTENSIONS = set(['txt', 'fasta', 'faa'])
+ALLOWED_EXTENSIONS = set(['txt', 'fasta', 'faa', 'abi'])
 
 
 # Check if uploaded file is of allowed type
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/dnaInput', methods=['GET', 'POST'])
+def dnaInput():
+
+    abi_form = ABIInputForm()
+
+    if abi_form.validate_on_submit():
+
+        cookieExpireDate = datetime.datetime.now()
+        cookieExpireDate = cookieExpireDate + datetime.timedelta(days=90)
+
+        abiRedirect = make_response(redirect('/abiResults'))
+
+        userID = request.cookies.get('uuid')
+
+        if userID is None:
+            abiRedirect.set_cookie('uuid', str(uuid.uuid4()), expires=cookieExpireDate)
+
+        abi_filename = ABS_TMP + userID + '.abi'
+        abi_form.abi_file.data.save(abi_filename)
+
+        return abiRedirect 
+
+    return render_template('dnaInput.html', 
+                           title = 'DNA Input',
+                           abi_form = abi_form)
+
+
 
 
 @app.route('/proteinInput', methods=['GET', 'POST'])
@@ -126,6 +156,207 @@ def proteinInput():
                             title = 'Protein Input',
                             form1 = form1)
 
+
+@app.route('/abiResults')
+def abiResults():
+
+    # Read User UUID
+    userID = request.cookies.get('uuid')
+
+    # Check History 
+    if userID is None:
+       flash(u'ABI file not found. Please resubmit.', 'error')
+       return redirect('/dnaInput')
+
+    abi_file = ABS_TMP + userID + '.abi'
+    record = SeqIO.read(abi_file, 'abi')
+
+    channels = ['DATA9', 'DATA10', 'DATA11', 'DATA12']
+
+    trace = collections.defaultdict(list)
+
+    for c in channels:
+        trace[c] = record.annotations['abif_raw'][c]
+
+    seq_length = len(trace['DATA9'])
+    x = np.linspace(1,seq_length,seq_length)
+
+    res_locations = record.annotations['abif_raw']['PLOC2']
+    res_labels_string = record.annotations['abif_raw']['PBAS2']
+    res_labels = []
+
+    for char in res_labels_string:
+        res_labels.append(char)
+
+    label_y = []
+
+    for location in res_locations:
+        label_y.append(max(trace['DATA9'][location], trace['DATA10'][location], trace['DATA11'][location], trace['DATA12'][location]) + 50)
+
+    quality_scores =  record.letter_annotations['phred_quality']
+
+    dye_label = []
+
+    for i in range(1,5):
+        dye = 'DyeW' + str(i)
+        wavelength = record.annotations['abif_raw'][dye]
+
+        if wavelength == 540:
+            dye_label.append('Wavelength 540 (G)')
+        elif wavelength == 568:
+            dye_label.append('Wavelength 568 (A)')
+        elif wavelength == 595:
+            dye_label.append('Wavelength 595 (T)')
+        elif wavelength == 615:
+            dye_label.append('Wavelength 615 (C)') 
+
+    trim_sequence_record = SeqIO.AbiIO._abi_trim(record)
+
+    raw_sequence = res_labels_string
+    trim_sequence = trim_sequence_record.seq
+
+    trace_1 = go.Scatter(
+        x = x,
+        y = trace['DATA9'],
+        fill = 'tozeroy',
+        line=dict(
+            color='#440154',
+        ),
+        opacity = 0.7,
+        name = dye_label[0],
+    )
+    trace_2 = go.Scatter(
+        x = x,
+        y = trace['DATA10'],
+        fill = 'tozeroy',
+        line=dict(
+            color='#355F8D',
+        ),
+        opacity = 0.7,
+        name = dye_label[1],
+    )
+    trace_3 = go.Scatter(
+        x = x,
+        y = trace['DATA11'],
+        fill = 'tozeroy',
+        line=dict(
+            color='#44BE70',
+        ),
+        opacity = 0.7,
+        name = dye_label[2],
+    )
+    trace_4 = go.Scatter(
+        x = x,
+        y = trace['DATA12'],
+        fill = 'tozeroy',
+        line=dict(
+            color='#FDE725',
+        ),
+        opacity = 0.8,
+        name = dye_label[3],
+    )
+    trace_seq = go.Scatter(
+        x = res_locations,
+        y = label_y,
+        mode = 'text',
+        name = 'Basecaller Sequence',
+        marker = dict(
+            size = 3,
+        ),
+        text = res_labels,
+    )
+    trace_quality = go.Scatter(
+        x = res_locations,
+        y = quality_scores,
+        name = 'Quality Scores',
+        line = dict(
+            width = 5,
+            color = '#dd4444',
+        ),
+        yaxis = 'y2',
+    )
+    
+    data = [trace_1,trace_2,trace_3,trace_4,trace_seq,trace_quality]
+
+    layout = go.Layout (
+
+        title = 'ABI File Raw Plots',
+        hovermode= 'closest',
+        showlegend = True,
+        width = 800,
+        height = 700,
+        autosize = False,
+
+        font = dict(
+            size = 22,
+        ),
+
+        xaxis = dict(
+            title = 'sequence data',
+            range = [0,200],
+            showgrid = False,
+            titlefont=dict(
+                size=20,
+            ),
+            tickfont=dict(
+                size=14,
+            ),
+            zerolinewidth=0,
+            ticks = 'outside',
+        ),
+
+        yaxis = dict(
+            title = 'signal strength',
+            range = [0,2800],
+            showgrid = False,
+            titlefont=dict(
+                size=20,
+            ),
+            tickfont=dict(
+                size=14,
+            ),
+            zerolinewidth=0,
+            ticks = 'outside',
+        ),
+
+        yaxis2=dict(
+            title='quality score',
+            range = [-50,50],
+            titlefont=dict(
+                color='#aa1111',
+                size = 20,
+            ),
+            tickfont=dict(
+               color='#aa1111',
+               size = 14,
+            ),
+            zerolinewidth=0,
+            overlaying='y',
+            side='right'
+        ),
+
+        legend = dict(
+            x = 0,
+            y = 1,
+            bordercolor = '#333333',
+            borderwidth = 1,
+            font = dict(
+                size = 16
+            ),
+            xanchor = 'left',
+            yanchor = 'top',
+        ),
+    )
+
+    fig = go.Figure(data=data, layout=layout)
+
+    abi_plot_div = plot(fig, output_type='div')
+    
+    return render_template('abiResults.html',
+                            title = 'ABI Results',
+                            raw_sequence = raw_sequence,
+                            trim_sequence = trim_sequence,
+                            abi_plot_div = abi_plot_div)
 
 
 @app.route('/proteinResults')
@@ -825,10 +1056,6 @@ def proteinResults():
                             scoreTable = scoreTable)
 
 
-@app.route('/dnaInput')
-def dnaInput():
-    return render_template('dnaInput.html',
-                           title = 'DNA Input')
 
 
 @app.route('/')
